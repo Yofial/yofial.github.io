@@ -1,0 +1,22 @@
+.up {
+    background-image: url("up.svg");
+    background-repeat: no-repeat;
+}
+
+.down {
+    background-image: url("down.svg");
+    background-repeat: no-repeat;
+}
+
+li div a {
+    padding-left: 25px;
+}
+
+li {
+    list-style: none;
+    margin: 15px 0;
+}
+
+.test {
+    display: none;
+}
