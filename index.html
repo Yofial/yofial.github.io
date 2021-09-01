@@ -54,7 +54,7 @@
             <li key={index} id={app.id}>
                 <div><a href={app.url}>{app.description}</a></div>
                 <img className="test"
-                    src={app.healthUrl}
+                    src={app.healthUrl + "?" + new Date().getTime()}
                     onLoad={() => document.getElementById(app.id).className = "up"}
                     onError={() => document.getElementById(app.id).className = "down"}
                 />
