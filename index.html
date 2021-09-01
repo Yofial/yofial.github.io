@@ -3,14 +3,13 @@
 
 <head>
     <title>App - Uptime</title>
-    <link rel="icon" type="image/png" href="favicon.png"/>
+    <link rel="icon" type="image/png" href="favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div id="main">
-    </div>
+    <div id="main"></div>
 
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
@@ -19,40 +18,69 @@
         const apps =
             [
                 {
-                    "description": "Google",
-                    "id": "google",
-                    "url": "https://www.google.com",
-                    "healthUrl": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_150x54dp.png"
-                },
-                {
-                    "description": "Amazon",
-                    "id": "amazon",
-                    "url": "https://www.amazon.com",
-                    "healthUrl": "http://g-ec2.images-amazon.com/images/G/01/social/api-share/amazon_logo_500500._V323939215_.png"
-                },
-                {
-                    "description": "Menora Digital",
+                    "description": "Digital CDN",
                     "id": "menora",
                     "url": "https://www.menoramivt.co.il",
-                    "healthUrl": "https://cdn.menoramivt.co.il/public/images/2orkh2ajy8eekfw-website.jpg"
+                    "healthUrl": "https://cdn.menoramivt.co.il/public/images/ajx96xv13k7bxluis-menu.svg"
                 },
                 {
-                    "description": "Menora Old",
+                    "description": "External WS Portal",
                     "id": "menora-old",
                     "url": "https://www.menoramivt.co.il/wps/portal/ir/home/",
-                    "healthUrl": "https://www.menoramivt.co.il/wps/contenthandler/!ut/p/digest!SmGjT5W3xGGT8sA2msRVIw/war/menoraThemeStatic/themes/Portal8.0/css/images/menoraCustom/eng_logo.png"
+                    "healthUrl": "https://www.menoramivt.co.il/menoraThemeDynamic/themes/html/dynamicSpots/icons/blank.gif"
                 },
                 {
-                    "description": "Menora Dentistry",
+                    "description": "Dentistry Portal",
                     "id": "dent",
                     "url": "https://dent.menora.co.il/",
-                    "healthUrl": "https://dent.menora.co.il/public/images/customization/Common/DentPortal_Direct_general_ui/logo_image_en.png"
-                }
-            ];
+                    "healthUrl": "https://dent.menora.co.il/public/images/my/tr.gif"
+                },
+                {
+                    "description": "Remote Access",
+                    "id": "mra",
+                    "url": "https://mra.menora.co.il/",
+                    "healthUrl": "https://mra.menora.co.il/public/images/my/tr.gif"
+                },
+                {
+                    "description": "Safe",
+                    "id": "sfe",
+                    "url": "https://sfe.menora.co.il/SFE/Logon.aspx",
+                    "healthUrl": "https://sfe.menora.co.il/SFE/images/header_fill_gradient.gif"
+                },
+                {
+                    "description": "Marketing Minisites",
+                    "id": "minisites",
+                    "url": "https://car.menoramivt.co.il/",
+                    "healthUrl": "https://car.menoramivt.co.il/minisite/images/icon2.png"
+                },
+                {
+                    "description": "Mivtjob Wordpress",
+                    "id": "mivtjob",
+                    "url": "https://mivtjob.menoramivt.co.il/",
+                    "healthUrl": "https://mivtjob.menoramivt.co.il/wp-content/themes/yoo_master_wp/images/ndv/topmenuhover2.png"
+                },
+                {
+                    "description": "Forms Wizard",
+                    "id": "forms-wizard",
+                    "url": "https://register.menoramivt.co.il/",
+                    "healthUrl": "https://register.menoramivt.co.il/assets/logos/blue_fw_icon-ce7aac436d6078eaf0343faaf9254145639dd68f508d59aa7b975c9b3671f811.png"
+                },
+                {
+                    "description": "Top Cyber",
+                    "id": "topcyber",
+                    "url": "https://topcyber.menoramivt.co.il",
+                    "healthUrl": "https://topcyber.menoramivt.co.il/images/icons/computer.png"
+                },
+                {
+                    "description": "Easysend",
+                    "id": "easysend",
+                    "url": "https://easy.menoramivt.co.il",
+                    "healthUrl": "https://easy.menoramivt.co.il/menora/employer-admin/logoMenoraNew-bd4421ec6ace711f7c00b6ffca589104.png"
+                }];
 
         const appItems = apps.map((app, index) =>
             <li key={index} id={app.id}>
-                <div><a href={app.url}>{app.description}</a></div>
+                <div><a href={app.url} target="_blank">{app.description}</a></div>
                 <img className="test"
                     src={app.healthUrl + "?" + new Date().getTime()}
                     onLoad={() => document.getElementById(app.id).className = "up"}
