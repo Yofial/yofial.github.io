@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping-WIN - חיפוש חד, הנחתה מושלמת</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+	<link rel="icon" href="./favicon.webp" type="image/webp">
+
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <header class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-x-4">
+                <div class="relative w-64 h-64 mr-6">
+                    <div class="absolute inset-0 bg-blue-500 rounded-full"></div>
+                    <img src="./logo.png" alt="Ping-WIN Logo" class="absolute inset-0 w-full h-full object-cover rounded-full">
+                </div>
+                <div>
+                    <h1 class="text-5xl font-bold text-blue-800 mb-2">Ping-WIN</h1>
+                    <p class="text-2xl font-semibold text-blue-600">חיפוש חד, הנחתה מושלמת</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center border-b-2 border-blue-500 py-2">
+                <input type="text" placeholder="חיפוש" class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none">
+                <button class="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">
+                    חיפוש
+                </button>
+            </div>
+            <div class="flex justify-center items-center gap-x-4 mt-4">
+                <button class="bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold py-2 px-4 rounded inline-flex items-center">
+                    <svg class="fill-current w-4 h-4 ml-2 transform rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                    <span>העלאת קובץ</span>
+                </button>
+                <button class="bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold py-2 px-4 rounded inline-flex items-center">
+                    <svg class="fill-current w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M4 16h12V4H4v12zm2-7h8v2H6V9zm0 4h8v2H6v-2zm0-8h8v2H6V5z"/></svg>
+                    <span>הוספת טקסט</span>
+                </button>
+            </div>
+        </div>
+
+<div class="bg-white shadow-lg rounded-lg p-6">
+    <h2 class="text-2xl font-semibold mb-4 text-blue-800">תוצאות חיפוש</h2>
+    <div class="mb-4">
+        <a href="#" class="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold">הכל</a>
+        <a href="#" class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">טקסט</a>
+        <a href="#" class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">תמונות</a>
+        <a href="#" class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">וידאו</a>
+        <a href="#" class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">אודיו</a>
+    </div>
+    <p class="mb-4">מציג 1-6 מתוך 24 תוצאות</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300">
+            <div class="bg-gray-200 w-full h-40 flex items-center justify-center mb-2 rounded">
+                <svg class="w-12 h-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <h3 class="font-semibold text-lg mb-2">כותרת התוצאה</h3>
+            <p class="text-sm text-gray-600">תיאור קצר של התוצאה. כאן יופיע טקסט רלוונטי שנמצא בחיפוש הסמנטי.</p>
+            <div class="mt-2">
+                <span class="inline-block bg-blue-200 rounded-full px-3 py-1 text-sm font-semibold text-blue-700 mr-2">#הסברה</span>
+                <span class="inline-block bg-blue-200 rounded-full px-3 py-1 text-sm font-semibold text-blue-700">#ישראל</span>
+            </div>
+        </div>
+        <div class="border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300">
+            <div class="bg-gray-200 w-full h-40 flex items-center justify-center mb-2 rounded">
+                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path></svg>
+            </div>
+            <h3 class="font-semibold text-lg mb-2">סרטון הסברה</h3>
+            <p class="text-sm text-gray-600">תיאור קצר של הסרטון. זהו תוכן וידאו שנמצא רלוונטי לחיפוש שלך.</p>
+            <div class="mt-2">
+                <span class="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-green-700 mr-2">#וידאו</span>
+                <span class="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-green-700">#מידע</span>
+            </div>
+        </div>
+        <div class="border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300">
+            <div class="bg-gray-200 w-full h-40 flex items-center justify-center mb-2 rounded">
+                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+            </div>
+            <h3 class="font-semibold text-lg mb-2">קובץ אודיו</h3>
+            <p class="text-sm text-gray-600">תיאור קצר של קובץ האודיו. זהו תוכן שמע שנמצא רלוונטי לחיפוש שלך.</p>
+            <div class="mt-2">
+                <span class="inline-block bg-yellow-200 rounded-full px-3 py-1 text-sm font-semibold text-yellow-700 mr-2">#אודיו</span>
+                <span class="inline-block bg-yellow-200 rounded-full px-3 py-1 text-sm font-semibold text-yellow-700">#פודקאסט</span>
+            </div>
+        </div>
+    </div>
+    <div class="mt-6 flex justify-center">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            טען עוד תוצאות
+        </button>
+    </div>
+</div>    </div>
+</body>
+</html>
