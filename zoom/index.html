@@ -41,7 +41,7 @@
             if (CryptoJS.SHA256(answer).toString() === correctHash) {
                 window.location.href = `https://us02web.zoom.us/j/7315416583?pwd=${theCode}#success`; // Replace with your actual Zoom meeting link
             } else {
-                alert('Incorrect answer. Please try again.');
+                alert('Incorrect answer. Please try again.\n סיסמה שגויה. אנא נסה שנית');
             }
         });
     </script>
