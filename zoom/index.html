@@ -36,7 +36,7 @@
             e.preventDefault();
 			const theCode = 'NWhEQTQvSTNvWUJqc2ZHKzN1WGNPZz09';
             const answer = document.getElementById('answer').value;
-            const correctHash = '5c1cc7f0a50fe7a64e8de61c053aa7cecb652b87b3b7124ab3ea789a1676f21a'; //
+            const correctHash = '031b4af5197ec30a926f48cf40e11a7dbc470048a21e4003b7a3c07c5dab1baa';
             
             if (CryptoJS.SHA256(answer).toString() === correctHash) {
                 window.location.href = `https://us02web.zoom.us/j/7315416583?pwd=${theCode}#success`; // Replace with your actual Zoom meeting link
