@@ -18,6 +18,7 @@
     --accent:#5b3a29;
     --accent-strong:#2f5233;
     --line:#d8c9a0;
+    --gemara-pct:50%;
   }
   *{box-sizing:border-box;}
   body{
@@ -27,6 +28,7 @@
     font-family:'Heebo',sans-serif;
     padding:2rem 1rem 4rem;
   }
+  body.resizing-columns{user-select:none;cursor:col-resize;}
   h1{
     font-family:'Frank Ruhl Libre',serif;
     font-size:1.9rem;
@@ -71,16 +73,27 @@
     border-bottom:2px solid var(--accent);
   }
   .amud-heading:first-child{margin-top:0;}
-  .dual-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:1.6rem;align-items:start;}
+  .dual-grid{
+    position:relative;
+    display:grid;grid-template-columns:var(--gemara-pct) 1fr;
+    column-gap:1.6rem;align-items:start;
+  }
+  .drag-handle{
+    position:absolute;top:0;bottom:0;
+    left:calc(100% - var(--gemara-pct));
+    width:16px;margin-left:-8px;
+    cursor:col-resize;z-index:4;touch-action:none;
+  }
+  .drag-handle::before{
+    content:"";position:absolute;top:0;bottom:0;left:50%;
+    width:2px;background:var(--line);transform:translateX(-50%);
+  }
+  .drag-handle:hover::before{background:var(--accent);width:3px;}
+  body.resizing-columns .drag-handle::before{background:var(--accent);width:3px;}
   .gemara-p,.comment-p{margin:0 0 .9rem;line-height:1.9;}
   .gemara-p{color:var(--gemara);font-family:'Frank Ruhl Libre',serif;font-size:1.18rem;padding-inline-end:1.1rem;}
   .comment-p{color:var(--comment);font-size:1rem;line-height:1.8;border-inline-start:1px solid var(--line);padding-inline-start:1.1rem;}
   .comment-p .empty{color:#a89b83;font-style:italic;font-size:.88rem;}
-  .seg-num{
-    display:inline-block;font-size:.62rem;color:var(--ink-soft);
-    vertical-align:top;margin-inline-end:.35rem;margin-top:.3rem;
-    min-width:1.1em;text-align:center;
-  }
   .sugya-break{
     grid-column:1 / -1;
     display:flex;align-items:center;gap:.75rem;
@@ -89,14 +102,14 @@
   .sugya-break::before,.sugya-break::after{content:"";flex:1;height:1px;background:var(--line);}
   .sugya-break .mark{color:var(--accent);font-size:.8rem;opacity:.75;}
   .sentinel{height:1px;}
-  .end-note{text-align:center;color:var(--ink-soft);font-size:.85rem;padding:1.2rem 0;grid-column:1/-1;}
+  .end-note{text-align:center;color:var(--ink-soft);font-size:.85rem;padding:1.2rem 0;}
   .load-more-row{display:flex;justify-content:center;margin:1rem 0 2rem;}
   footer{max-width:960px;margin:2rem auto 0;font-size:.8rem;color:var(--ink-soft);line-height:1.7;}
   footer a{color:var(--accent);}
-  footer code{background:var(--paper-edge);padding:.05rem .3rem;border-radius:3px;}
   @media (max-width:640px){
     .dual-grid{grid-template-columns:1fr;}
     .comment-p{border-inline-start:none;border-top:1px dashed var(--line);padding-inline-start:0;padding-top:.5rem;}
+    .drag-handle{display:none;}
   }
 </style>
 </head>
@@ -128,7 +141,10 @@
   </div>
 
   <div class="status" id="status"></div>
-  <div id="results"></div>
+  <div id="results">
+    <div class="sentinel" id="topSentinel"></div>
+    <div class="sentinel" id="bottomSentinel"></div>
+  </div>
   <div class="load-more-row" id="loadMoreRow" style="display:none;">
     <button class="secondary" id="loadMore">טען את העמוד הבא</button>
   </div>
@@ -297,11 +313,18 @@ function amudLabel(amud){ return amud === 'a' ? 'א' : 'ב'; }
 function nextAmud(daf, amud){
   return amud === 'a' ? { daf, amud: 'b' } : { daf: daf + 1, amud: 'a' };
 }
+function prevAmud(daf, amud){
+  if (amud === 'b') return { daf, amud: 'a' };
+  if (daf <= 2) return null; // page 1 doesn't exist in the standard pagination
+  return { daf: daf - 1, amud: 'b' };
+}
 
 // Fetches one amud (page-side), its matched commentary, and (best-effort)
 // its sugya breaks, and returns rendered HTML: a single flowing text per
-// column, paragraph-per-segment, with a full-width divider wherever the
-// sugya changes.
+// column, paragraph-per-segment, with a plain divider wherever the sugya
+// changes. carryPrevSugya lets a caller say "this amud continues a sugya
+// that started on the previous page", suppressing a spurious break at the
+// very first segment.
 async function loadOneAmud(bookEn, bookHe, commentatorEn, commentatorHe, daf, amud, carryPrevSugya){
   const loc = `${daf}${amud}`;
   const baseRef = `${bookEn}.${loc}`;
@@ -322,13 +345,10 @@ async function loadOneAmud(bookEn, bookHe, commentatorEn, commentatorHe, daf, am
 
   const sugyaMap = await fetchSugyaMap(segRefs);
 
-  // Seed prevSugya so the very first segment never triggers a spurious break:
-  // - if this amud continues a sugya carried over from the previous page,
-  //   use that, so the divider only appears once the sugya actually changes;
-  // - otherwise seed it with the first segment's own sugya.
   let prevSugya = (carryPrevSugya !== undefined && carryPrevSugya !== null)
     ? carryPrevSugya
     : (sugyaMap.get(normRef(segRefs[0])) || null);
+  const firstSugya = prevSugya;
 
   let rowsHtml = '';
   for (let i = 0; i < baseSegments.length; i++) {
@@ -349,18 +369,19 @@ async function loadOneAmud(bookEn, bookHe, commentatorEn, commentatorHe, daf, am
     }
 
     rowsHtml += `
-      <p class="gemara-p"><span class="seg-num">${i + 1}</span>${baseSegments[i]}</p>
-      <p class="comment-p"><span class="seg-num">${i + 1}</span>${commentaryHtml}</p>`;
+      <p class="gemara-p">${baseSegments[i]}</p>
+      <p class="comment-p">${commentaryHtml}</p>`;
   }
 
   const heading = `<div class="amud-heading">${bookHe} — דף ${hebrewNumeral(daf)} עמוד ${amudLabel(amud)}</div>`;
-  return { html: heading + `<div class="dual-grid">${rowsHtml}</div>`, lastSugya: prevSugya };
+  const grid = `<div class="dual-grid"><div class="drag-handle"></div>${rowsHtml}</div>`;
+  return { html: heading + grid, firstSugya, lastSugya: prevSugya };
 }
 
 // ---- Scroll / pagination state ----
-let state = null; // { bookEn, bookHe, commentatorEn, commentatorHe, daf, amud, loading, ended }
-let observer = null;
-let sentinelEl = null;
+let state = null;
+let topObserver = null;
+let bottomObserver = null;
 
 function setStatus(text, isError){
   const el = document.getElementById('status');
@@ -368,46 +389,100 @@ function setStatus(text, isError){
   el.textContent = text;
 }
 
-function attachSentinel(){
-  if (sentinelEl) sentinelEl.remove();
-  sentinelEl = document.createElement('div');
-  sentinelEl.className = 'sentinel';
-  document.getElementById('results').appendChild(sentinelEl);
-  if (observer) observer.disconnect();
-  observer = new IntersectionObserver((entries) => {
+function initObservers(){
+  const topSentinel = document.getElementById('topSentinel');
+  const bottomSentinel = document.getElementById('bottomSentinel');
+  if (topObserver) topObserver.disconnect();
+  if (bottomObserver) bottomObserver.disconnect();
+  topObserver = new IntersectionObserver((entries) => {
+    if (entries.some(e => e.isIntersecting)) loadPrevAmud();
+  }, { rootMargin: '1600px 0px 1600px 0px' });
+  bottomObserver = new IntersectionObserver((entries) => {
     if (entries.some(e => e.isIntersecting)) loadNextAmud();
   }, { rootMargin: '1600px 0px 1600px 0px' });
-  observer.observe(sentinelEl);
+  topObserver.observe(topSentinel);
+  bottomObserver.observe(bottomSentinel);
 }
 
-function showEndNote(message){
-  if (observer) observer.disconnect();
-  if (sentinelEl) sentinelEl.remove();
-  document.getElementById('loadMoreRow').style.display = 'none';
-  document.getElementById('results').insertAdjacentHTML('beforeend', `<div class="end-note">${message}</div>`);
+function clearAmudContent(){
+  const top = document.getElementById('topSentinel');
+  const bottom = document.getElementById('bottomSentinel');
+  let node = top.nextSibling;
+  while (node && node !== bottom) {
+    const next = node.nextSibling;
+    node.remove();
+    node = next;
+  }
+}
+
+function showEndNote(edge, message){
+  if (edge === 'top') {
+    if (topObserver) topObserver.disconnect();
+    document.getElementById('topSentinel').insertAdjacentHTML('afterend', `<div class="end-note">${message}</div>`);
+  } else {
+    if (bottomObserver) bottomObserver.disconnect();
+    document.getElementById('loadMoreRow').style.display = 'none';
+    document.getElementById('bottomSentinel').insertAdjacentHTML('beforebegin', `<div class="end-note">${message}</div>`);
+  }
 }
 
 async function loadNextAmud(){
-  if (!state || state.loading || state.ended) return;
-  state.loading = true;
+  if (!state || state.bottomLoading || state.bottomEnded) return;
+  state.bottomLoading = true;
   setStatus('טוען את העמוד הבא…');
   try {
     const { html, lastSugya } = await loadOneAmud(
-      state.bookEn, state.bookHe, state.commentatorEn, state.commentatorHe, state.daf, state.amud, state.lastSugya
+      state.bookEn, state.bookHe, state.commentatorEn, state.commentatorHe,
+      state.bottomDaf, state.bottomAmud, state.bottomSugya
     );
-    document.getElementById('results').insertAdjacentHTML('beforeend', html);
-    attachSentinel();
-    setStatus(`נטען: ${state.bookHe}, דף ${hebrewNumeral(state.daf)} עמוד ${amudLabel(state.amud)}.`);
-    const next = nextAmud(state.daf, state.amud);
-    state.daf = next.daf;
-    state.amud = next.amud;
-    state.lastSugya = lastSugya;
+    document.getElementById('bottomSentinel').insertAdjacentHTML('beforebegin', html);
+    setStatus(`נטען: ${state.bookHe}, דף ${hebrewNumeral(state.bottomDaf)} עמוד ${amudLabel(state.bottomAmud)}.`);
+    const next = nextAmud(state.bottomDaf, state.bottomAmud);
+    state.bottomDaf = next.daf;
+    state.bottomAmud = next.amud;
+    state.bottomSugya = lastSugya;
   } catch (err) {
-    state.ended = true;
-    showEndNote('הגעתם לסוף הטקסט הזמין (או שהדף המבוקש לא קיים במסכת זו).');
-    setStatus('עצירה: ' + err.message, true);
+    state.bottomEnded = true;
+    showEndNote('bottom', 'הגעתם לסוף הטקסט הזמין (או שהדף המבוקש לא קיים במסכת זו).');
   } finally {
-    state.loading = false;
+    state.bottomLoading = false;
+  }
+}
+
+// Prepends the previous amud above the currently-topmost content. Keeps the
+// visible scroll position stable by compensating for the added height, so
+// content appearing above doesn't shove the reader's current spot down the
+// screen.
+async function loadPrevAmud(){
+  if (!state || state.topLoading || state.topEnded) return;
+  state.topLoading = true;
+  try {
+    const { html, firstSugya, lastSugya } = await loadOneAmud(
+      state.bookEn, state.bookHe, state.commentatorEn, state.commentatorHe,
+      state.topDaf, state.topAmud, null
+    );
+    const continuesSameSugya = !!(lastSugya && state.topSugya && lastSugya === state.topSugya);
+    const insertHtml = html + (continuesSameSugya ? '' : '<div class="sugya-break"><span class="mark">❖</span></div>');
+
+    const prevScrollHeight = document.documentElement.scrollHeight;
+    const prevScrollTop = window.scrollY;
+    document.getElementById('topSentinel').insertAdjacentHTML('afterend', insertHtml);
+    const addedHeight = document.documentElement.scrollHeight - prevScrollHeight;
+    window.scrollTo(0, prevScrollTop + addedHeight);
+
+    state.topSugya = firstSugya;
+    const prev = prevAmud(state.topDaf, state.topAmud);
+    if (!prev) {
+      state.topEnded = true;
+      showEndNote('top', 'זו תחילת המסכת.');
+    } else {
+      state.topDaf = prev.daf;
+      state.topAmud = prev.amud;
+    }
+  } catch (err) {
+    state.topEnded = true;
+  } finally {
+    state.topLoading = false;
   }
 }
 
@@ -420,24 +495,32 @@ async function load(){
   const amud = document.getElementById('amud').value;
   const btn = document.getElementById('load');
 
-  document.getElementById('results').innerHTML = '';
+  clearAmudContent();
   document.getElementById('loadMoreRow').style.display = 'flex';
-  if (observer) observer.disconnect();
-  sentinelEl = null;
   btn.disabled = true;
   setStatus('טוען…');
 
-  state = { bookEn, bookHe, commentatorEn, commentatorHe, daf, amud, loading: false, ended: false };
+  state = {
+    bookEn, bookHe, commentatorEn, commentatorHe,
+    bottomDaf: null, bottomAmud: null, bottomSugya: null, bottomLoading: false, bottomEnded: false,
+    topDaf: null, topAmud: null, topSugya: null, topLoading: false, topEnded: false
+  };
 
   try {
-    const { html, lastSugya } = await loadOneAmud(bookEn, bookHe, commentatorEn, commentatorHe, daf, amud, null);
-    document.getElementById('results').innerHTML = html;
-    attachSentinel();
-    setStatus(`נטען: ${bookHe}, דף ${hebrewNumeral(daf)} עמוד ${amudLabel(amud)}. גללו למטה כדי להמשיך לעמוד הבא.`);
+    const { html, firstSugya, lastSugya } = await loadOneAmud(bookEn, bookHe, commentatorEn, commentatorHe, daf, amud, null);
+    document.getElementById('topSentinel').insertAdjacentHTML('afterend', html);
+    initObservers();
+    setStatus(`נטען: ${bookHe}, דף ${hebrewNumeral(daf)} עמוד ${amudLabel(amud)}. אפשר לגלול כדי להמשיך בשני הכיוונים.`);
+
     const next = nextAmud(daf, amud);
-    state.daf = next.daf;
-    state.amud = next.amud;
-    state.lastSugya = lastSugya;
+    state.bottomDaf = next.daf;
+    state.bottomAmud = next.amud;
+    state.bottomSugya = lastSugya;
+
+    const prev = prevAmud(daf, amud);
+    if (!prev) state.topEnded = true;
+    else { state.topDaf = prev.daf; state.topAmud = prev.amud; }
+    state.topSugya = firstSugya;
   } catch (err) {
     setStatus('שגיאה: ' + err.message, true);
     console.error(err);
@@ -445,6 +528,33 @@ async function load(){
     btn.disabled = false;
   }
 }
+
+// ---- Draggable column split (event delegation so it works for handles
+// added later by infinite scroll, without re-binding listeners each time) ----
+document.addEventListener('pointerdown', (e) => {
+  const handle = e.target.closest('.drag-handle');
+  if (!handle) return;
+  const grid = handle.closest('.dual-grid');
+  if (!grid) return;
+  const rect = grid.getBoundingClientRect();
+  handle.setPointerCapture(e.pointerId);
+  document.body.classList.add('resizing-columns');
+  e.preventDefault();
+
+  function onMove(ev){
+    const relX = ev.clientX - rect.left;
+    const commentPct = Math.min(80, Math.max(20, (relX / rect.width) * 100));
+    document.documentElement.style.setProperty('--gemara-pct', (100 - commentPct) + '%');
+  }
+  function onUp(ev){
+    try { handle.releasePointerCapture(ev.pointerId); } catch (err) {}
+    document.body.classList.remove('resizing-columns');
+    window.removeEventListener('pointermove', onMove);
+    window.removeEventListener('pointerup', onUp);
+  }
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onUp);
+});
 
 populateSelects();
 document.getElementById('book').addEventListener('change', populateDafSelect);
