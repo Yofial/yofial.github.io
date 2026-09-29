@@ -9,147 +9,90 @@
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Heebo:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#f2ead9;
-    --paper-edge:#e4d8b8;
-    --ink:#26221c;
-    --ink-soft:#665c48;
-    --gemara:#1c2a3a;
-    --comment:#4a3222;
-    --accent:#5b3a29;
-    --accent-strong:#2f5233;
-    --line:#d8c9a0;
-    --gemara-pct:50%;
+    --paper:#f2ead9;--paper-edge:#e4d8b8;--ink:#26221c;--ink-soft:#665c48;
+    --gemara:#1c2a3a;--comment:#4a3222;--accent:#5b3a29;--accent-strong:#2f5233;
+    --line:#d8c9a0;--gemara-pct:50%;
   }
   *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Heebo',sans-serif;
-    padding:2rem 1rem 4rem;
-  }
+  html{overflow-anchor:none;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Heebo',sans-serif;padding:0 1rem 3rem;}
   body.resizing-columns{user-select:none;cursor:col-resize;}
-  h1{
-    font-family:'Frank Ruhl Libre',serif;
-    font-size:1.9rem;
-    font-weight:700;
-    margin:0 0 .3rem;
-  }
-  .panel{max-width:960px;margin:0 auto;}
+  .panel{max-width:1440px;margin:0 auto;}
+  .logo{width:1.7rem;height:1.7rem;flex:none;border-radius:7px;}
+
+  /* compact sticky form */
   .controls{
-    display:flex;flex-wrap:wrap;gap:.9rem;align-items:end;
-    background:#fffdf7;border:1px solid var(--line);border-radius:8px;
-    padding:1.1rem 1.3rem;margin-bottom:1.4rem;
+    position:sticky;top:0;z-index:20;
+    display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;
+    background:#fffdf7;border:1px solid var(--line);border-radius:0 0 8px 8px;
+    padding:.4rem .6rem;margin-bottom:1rem;box-shadow:0 2px 6px rgba(60,40,10,.12);
   }
-  .field{display:flex;flex-direction:column;gap:.3rem;flex:1;min-width:130px;}
-  label{font-size:.78rem;color:var(--ink-soft);}
-  input,select{
-    font:inherit;padding:.55rem .65rem;border:1px solid var(--line);
-    border-radius:5px;background:var(--paper);color:var(--ink);
-  }
+  input,select{font:inherit;font-size:.85rem;padding:.25rem .4rem;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink);}
   select{
-    appearance:none;-webkit-appearance:none;-moz-appearance:none;
+    appearance:none;-webkit-appearance:none;-moz-appearance:none;cursor:pointer;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5.5 8L10 12.5L14.5 8' stroke='%235b3a29' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;
-    background-position:left .6rem center;
-    background-size:15px;
-    padding-inline-start:1.9rem;
-    cursor:pointer;
+    background-repeat:no-repeat;background-position:left .3rem center;background-size:13px;padding:.25rem .5rem .25rem 1.6rem;direction:rtl;
   }
+  #book{width:6.5rem;} #daf{width:4.6rem;} #amud{width:5.4rem;} #commentator{width:6.5rem;}
   input:focus,select:focus{outline:2px solid var(--accent-strong);outline-offset:1px;}
-  button{
-    font:inherit;font-weight:600;background:var(--accent);color:#fff;
-    border:none;border-radius:5px;padding:.65rem 1.5rem;cursor:pointer;
-  }
+  button{font:inherit;font-size:.85rem;font-weight:600;background:var(--accent);color:#fff;border:none;border-radius:5px;padding:.3rem .9rem;cursor:pointer;}
   button:hover{background:var(--accent-strong);}
   button:disabled{opacity:.5;cursor:wait;}
   button.secondary{background:transparent;color:var(--accent);border:1px solid var(--accent);}
   button.secondary:hover{background:var(--paper-edge);}
-  .status{font-size:.85rem;color:var(--ink-soft);min-height:1.2em;margin-bottom:1.1rem;}
+  .status{flex:1;min-width:0;font-size:.75rem;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .status.error{color:#8a2e2e;}
-  .amud-heading{
-    font-family:'Frank Ruhl Libre',serif;font-size:1.25rem;font-weight:700;
-    color:var(--ink);margin:2rem 0 1rem;padding-bottom:.4rem;
-    border-bottom:2px solid var(--accent);
-  }
-  .amud-heading:first-child{margin-top:0;}
+
+  /* one continuous grid; margin on the inline-start side holds the page labels */
   .dual-grid{
-    position:relative;
-    display:grid;grid-template-columns:var(--gemara-pct) 1fr;
-    column-gap:1.6rem;align-items:start;
+    position:relative;margin-inline-start:3.2rem;
+    display:grid;grid-template-columns:var(--gemara-pct) 1fr;column-gap:1.4rem;align-items:start;
   }
   .drag-handle{
-    position:absolute;top:0;bottom:0;
-    left:calc(100% - var(--gemara-pct));
-    width:16px;margin-left:-8px;
-    cursor:col-resize;z-index:4;touch-action:none;
+    position:absolute;top:0;bottom:0;left:calc(100% - var(--gemara-pct) - .7rem);width:1.4rem;
+    cursor:col-resize;z-index:4;touch-action:pan-y;
   }
-  .drag-handle::before{
-    content:"";position:absolute;top:0;bottom:0;left:50%;
-    width:2px;background:var(--line);transform:translateX(-50%);
-  }
-  .drag-handle:hover::before{background:var(--accent);width:3px;}
-  body.resizing-columns .drag-handle::before{background:var(--accent);width:3px;}
-  .gemara-p,.comment-p{margin:0 0 .9rem;line-height:1.9;}
-  .gemara-p{color:var(--gemara);font-family:'Frank Ruhl Libre',serif;font-size:1.18rem;padding-inline-end:1.1rem;}
-  .comment-p{color:var(--comment);font-size:1rem;line-height:1.8;border-inline-start:1px solid var(--line);padding-inline-start:1.1rem;}
+  .drag-handle::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--line);}
+  .drag-handle:hover::before,body.resizing-columns .drag-handle::before{background:var(--accent);width:3px;margin-left:-1px;}
+  .gemara-p,.comment-p{margin:0 0 .45rem;line-height:1.85;}
+  .gemara-p{position:relative;padding-left:.9rem;color:var(--gemara);font-family:'Frank Ruhl Libre',serif;font-size:1.18rem;}
+  .comment-p{color:var(--comment);font-size:1rem;line-height:1.75;}
   .comment-p .empty{color:#a89b83;font-style:italic;font-size:.88rem;}
-  .sugya-break{
-    grid-column:1 / -1;
-    display:flex;align-items:center;gap:.75rem;
-    margin:1.7rem 0 1.4rem;
+  .gemara-p.page-start::before{
+    content:attr(data-page);position:absolute;inset-inline-start:-3rem;width:2.5rem;top:.35rem;
+    font:500 .72rem/1.25 'Heebo',sans-serif;color:var(--ink-soft);
   }
-  .sugya-break::before,.sugya-break::after{content:"";flex:1;height:1px;background:var(--line);}
-  .sugya-break .mark{color:var(--accent);font-size:.8rem;opacity:.75;}
-  .sentinel{height:1px;}
-  .end-note{text-align:center;color:var(--ink-soft);font-size:.85rem;padding:1.2rem 0;}
+  .sugya-break{grid-column:1 / -1;text-align:center;color:var(--accent);font-size:.75rem;opacity:.7;margin:.5rem 0 .7rem;}
+  .end-note{text-align:center;color:var(--ink-soft);font-size:.85rem;padding:1rem 0;}
   .load-more-row{display:flex;justify-content:center;margin:1rem 0 2rem;}
-  footer{max-width:960px;margin:2rem auto 0;font-size:.8rem;color:var(--ink-soft);line-height:1.7;}
+  footer{max-width:1440px;margin:2rem auto 0;font-size:.8rem;color:var(--ink-soft);line-height:1.7;}
   footer a{color:var(--accent);}
   @media (max-width:640px){
-    .dual-grid{grid-template-columns:1fr;}
-    .comment-p{border-inline-start:none;border-top:1px dashed var(--line);padding-inline-start:0;padding-top:.5rem;}
+    .dual-grid{grid-template-columns:1fr;margin-inline-start:2.6rem;}
+    .gemara-p.page-start::before{inset-inline-start:-2.6rem;width:2.2rem;}
+    .comment-p{border-top:1px dashed var(--line);padding-top:.4rem;margin-bottom:.8rem;}
     .drag-handle{display:none;}
+    #book,#commentator{flex:1 1 5rem;} #daf,#amud{flex:0 0 auto;}
   }
 </style>
 </head>
 <body>
 <div class="panel">
-  <h1>גמרא ופירוש, שורה מול שורה</h1>
-
   <div class="controls">
-    <div class="field">
-      <label for="book">מסכת</label>
-      <select id="book"></select>
-    </div>
-    <div class="field">
-      <label for="daf">דף</label>
-      <select id="daf"></select>
-    </div>
-    <div class="field">
-      <label for="amud">עמוד</label>
-      <select id="amud">
-        <option value="a">עמוד א</option>
-        <option value="b">עמוד ב</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="commentator">פירוש</label>
-      <select id="commentator"></select>
-    </div>
+    <img class="logo" alt="" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='9' fill='%235b3a29'/><text x='20' y='29' font-size='26' text-anchor='middle' fill='%23f2ead9' font-family='serif'>ג</text></svg>">
+    <select id="book" aria-label="מסכת"></select>
+    <select id="daf" aria-label="דף"></select>
+    <select id="amud" aria-label="עמוד"><option value="a">עמוד א</option><option value="b">עמוד ב</option></select>
+    <select id="commentator" aria-label="פירוש"></select>
     <button id="load">טען</button>
+    <span class="status" id="status" role="status"></span>
   </div>
-
-  <div class="status" id="status"></div>
-  <div id="results">
-    <div class="sentinel" id="topSentinel"></div>
-    <div class="sentinel" id="bottomSentinel"></div>
-  </div>
+  <div class="dual-grid" id="grid"><div class="drag-handle"></div></div>
+  <div id="endTop"></div>
   <div class="load-more-row" id="loadMoreRow" style="display:none;">
     <button class="secondary" id="loadMore">טען את העמוד הבא</button>
   </div>
 </div>
-
 <footer>
   <p>
     מבוסס על ה-API הפתוח של <a href="https://developers.sefaria.org" target="_blank" rel="noopener">Sefaria</a>:
@@ -162,106 +105,77 @@
 <script>
 const API = 'https://www.sefaria.org/api';
 
-// Tractate list: [English index title, Hebrew name, approximate last daf number].
-// The last-daf figures are from general knowledge, not the API, and are only
-// used to size the dropdown — an out-of-range or non-existent daf just
-// surfaces as a normal fetch error instead of breaking anything.
+// [English title, Hebrew name, approximate last daf] — only used to size the dropdown.
 const TRACTATES = [
-  ['Berakhot','ברכות',64], ['Shabbat','שבת',157], ['Eruvin','עירובין',105],
-  ['Pesachim','פסחים',121], ['Rosh Hashanah','ראש השנה',35], ['Yoma','יומא',88],
-  ['Sukkah','סוכה',56], ['Beitzah','ביצה',40], ['Taanit','תענית',31],
-  ['Megillah','מגילה',32], ['Moed Katan','מועד קטן',29], ['Chagigah','חגיגה',27],
-  ['Yevamot','יבמות',122], ['Ketubot','כתובות',112], ['Nedarim','נדרים',91],
-  ['Nazir','נזיר',66], ['Sotah','סוטה',49], ['Gittin','גיטין',90],
-  ['Kiddushin','קידושין',82], ['Bava Kamma','בבא קמא',119], ['Bava Metzia','בבא מציעא',119],
-  ['Bava Batra','בבא בתרא',176], ['Sanhedrin','סנהדרין',113], ['Makkot','מכות',24],
-  ['Shevuot','שבועות',49], ['Avodah Zarah','עבודה זרה',76], ['Horayot','הוריות',14],
-  ['Zevachim','זבחים',120], ['Menachot','מנחות',110], ['Chullin','חולין',142],
-  ['Bekhorot','בכורות',61], ['Arachin','ערכין',34], ['Temurah','תמורה',34],
-  ['Keritot','כריתות',28], ['Meilah','מעילה',22], ['Tamid','תמיד',33],
-  ['Niddah','נדה',73]
+  ['Berakhot','ברכות',64],['Shabbat','שבת',157],['Eruvin','עירובין',105],['Pesachim','פסחים',121],
+  ['Rosh Hashanah','ראש השנה',35],['Yoma','יומא',88],['Sukkah','סוכה',56],['Beitzah','ביצה',40],
+  ['Taanit','תענית',31],['Megillah','מגילה',32],['Moed Katan','מועד קטן',29],['Chagigah','חגיגה',27],
+  ['Yevamot','יבמות',122],['Ketubot','כתובות',112],['Nedarim','נדרים',91],['Nazir','נזיר',66],
+  ['Sotah','סוטה',49],['Gittin','גיטין',90],['Kiddushin','קידושין',82],['Bava Kamma','בבא קמא',119],
+  ['Bava Metzia','בבא מציעא',119],['Bava Batra','בבא בתרא',176],['Sanhedrin','סנהדרין',113],
+  ['Makkot','מכות',24],['Shevuot','שבועות',49],['Avodah Zarah','עבודה זרה',76],['Horayot','הוריות',14],
+  ['Zevachim','זבחים',120],['Menachot','מנחות',110],['Chullin','חולין',142],['Bekhorot','בכורות',61],
+  ['Arachin','ערכין',34],['Temurah','תמורה',34],['Keritot','כריתות',28],['Meilah','מעילה',22],
+  ['Tamid','תמיד',33],['Niddah','נדה',73]
 ];
-
 const COMMENTATORS = [
-  ['Steinsaltz','שטיינזלץ'], ['Rashi','רש"י'], ['Tosafot','תוספות'], ['Ramban','רמב"ן'],
-  ['Rashba','רשב"א'], ['Ritva','ריטב"א'], ['Ran','ר"ן'], ['Maharsha','מהרש"א'],
-  ['Rosh','רא"ש'], ['Meiri','מאירי'], ['Rif','רי"ף'], ['Rashash','רש"ש'],
-  ['Piskei Tosafot','פסקי תוספות'], ['Gilyon HaShas','גליון הש"ס']
+  ['Steinsaltz','שטיינזלץ'],['Rashi','רש"י'],['Tosafot','תוספות'],['Ramban','רמב"ן'],['Rashba','רשב"א'],
+  ['Ritva','ריטב"א'],['Ran','ר"ן'],['Maharsha','מהרש"א'],['Rosh','רא"ש'],['Meiri','מאירי'],
+  ['Rif','רי"ף'],['Rashash','רש"ש'],['Piskei Tosafot','פסקי תוספות'],['Gilyon HaShas','גליון הש"ס']
 ];
 
 function hebrewNumeral(n){
-  const hundredVals = [[400,'ת'],[300,'ש'],[200,'ר'],[100,'ק']];
-  const tensVals = [[90,'צ'],[80,'פ'],[70,'ע'],[60,'ס'],[50,'נ'],[40,'מ'],[30,'ל'],[20,'כ'],[10,'י']];
-  const onesVals = [[9,'ט'],[8,'ח'],[7,'ז'],[6,'ו'],[5,'ה'],[4,'ד'],[3,'ג'],[2,'ב'],[1,'א']];
-  let remaining = n;
-  const parts = [];
-  for (const [val, letter] of hundredVals) {
-    while (remaining >= val) { parts.push(letter); remaining -= val; }
+  const H=[[400,'ת'],[300,'ש'],[200,'ר'],[100,'ק']],T=[[90,'צ'],[80,'פ'],[70,'ע'],[60,'ס'],[50,'נ'],[40,'מ'],[30,'ל'],[20,'כ'],[10,'י']],
+        O=[[9,'ט'],[8,'ח'],[7,'ז'],[6,'ו'],[5,'ה'],[4,'ד'],[3,'ג'],[2,'ב'],[1,'א']];
+  let r=n;const p=[];
+  for(const [v,l] of H) while(r>=v){p.push(l);r-=v;}
+  if(r===15){p.push('ט','ו');r=0;} else if(r===16){p.push('ט','ז');r=0;}
+  else{
+    for(const [v,l] of T) if(r>=v){p.push(l);r-=v;break;}
+    for(const [v,l] of O) if(r>=v){p.push(l);r-=v;break;}
   }
-  if (remaining === 15) { parts.push('ט','ו'); remaining = 0; }
-  else if (remaining === 16) { parts.push('ט','ז'); remaining = 0; }
-  else {
-    for (const [val, letter] of tensVals) if (remaining >= val) { parts.push(letter); remaining -= val; break; }
-    for (const [val, letter] of onesVals) if (remaining >= val) { parts.push(letter); remaining -= val; break; }
-  }
-  if (parts.length === 0) return String(n);
-  if (parts.length === 1) return parts[0] + '\u05F3';
-  return parts.slice(0, -1).join('') + '\u05F4' + parts[parts.length - 1];
+  if(!p.length) return String(n);
+  if(p.length===1) return p[0]+'\u05F3';
+  return p.slice(0,-1).join('')+'\u05F4'+p[p.length-1];
 }
+const amudLabel = a => a === 'a' ? 'א' : 'ב';
 
 function populateSelects(){
-  const bookSel = document.getElementById('book');
-  bookSel.innerHTML = TRACTATES.map(([en, he]) => `<option value="${en}">${he}</option>`).join('');
-  bookSel.value = 'Bekhorot';
-
-  const commSel = document.getElementById('commentator');
-  commSel.innerHTML = COMMENTATORS.map(([en, he]) => `<option value="${en}">${he}</option>`).join('');
-  commSel.value = 'Steinsaltz';
-
+  const b = document.getElementById('book');
+  b.innerHTML = TRACTATES.map(([en,he]) => `<option value="${en}">${he}</option>`).join('');
+  b.value = 'Bekhorot';
+  const c = document.getElementById('commentator');
+  c.innerHTML = COMMENTATORS.map(([en,he]) => `<option value="${en}">${he}</option>`).join('');
+  c.value = 'Steinsaltz';
   populateDafSelect();
 }
-
 function populateDafSelect(){
-  const book = document.getElementById('book').value;
-  const entry = TRACTATES.find(t => t[0] === book);
-  const maxDaf = entry ? entry[2] : 30;
-  const dafSel = document.getElementById('daf');
-  const opts = [];
-  for (let n = 2; n <= maxDaf; n++) opts.push(`<option value="${n}">${hebrewNumeral(n)}</option>`);
-  dafSel.innerHTML = opts.join('');
-  dafSel.value = '2';
+  const entry = TRACTATES.find(t => t[0] === document.getElementById('book').value);
+  const max = entry ? entry[2] : 30, opts = [];
+  for (let n = 2; n <= max; n++) opts.push(`<option value="${n}">${hebrewNumeral(n)}</option>`);
+  const d = document.getElementById('daf');
+  d.innerHTML = opts.join(''); d.value = '2';
 }
 
-function normRef(s){
-  return (s || '').toLowerCase().replace(/[._:]/g, ' ').replace(/\s+/g, ' ').trim();
-}
+const normRef = s => (s || '').toLowerCase().replace(/[._:]/g,' ').replace(/\s+/g,' ').trim();
 
+class NoTextError extends Error {}
 async function fetchJSON(url){
   const res = await fetch(url, { headers: { accept: 'application/json' } });
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText} — ${url}`);
+  if (!res.ok) { const e = new Error(`${res.status} ${res.statusText}`); e.status = res.status; throw e; }
   return res.json();
 }
-
-// The exact shape of the v3 response can vary slightly by text type, so this
-// checks a few likely locations for the segment array rather than assuming one.
 async function fetchSegments(ref){
-  const url = `${API}/v3/texts/${encodeURIComponent(ref)}?version=hebrew`;
-  const data = await fetchJSON(url);
-  console.log('texts v3 response for', ref, data);
+  const data = await fetchJSON(`${API}/v3/texts/${encodeURIComponent(ref)}?version=hebrew`);
   let raw = null;
   if (Array.isArray(data.versions) && data.versions.length) raw = data.versions[0].text;
-  else if (data.he) raw = data.he;
-  else if (data.text) raw = data.text;
+  else if (data.he) raw = data.he; else if (data.text) raw = data.text;
   if (raw == null) return null;
   return Array.isArray(raw) ? raw : [raw];
 }
-
 async function fetchLinksGrouped(baseRef, commentatorEn){
-  const url = `${API}/links/${encodeURIComponent(baseRef)}?with_text=1&category=Commentary`;
-  const links = await fetchJSON(url);
-  console.log('links response for', baseRef, links);
-  const wanted = commentatorEn.toLowerCase();
-  const grouped = new Map();
+  const links = await fetchJSON(`${API}/links/${encodeURIComponent(baseRef)}?with_text=1&category=Commentary`);
+  const wanted = commentatorEn.toLowerCase(), grouped = new Map();
   for (const link of links) {
     const title = (link.collectiveTitle?.en || link.index_title || link.sourceRef || '').toLowerCase();
     if (!title.includes(wanted)) continue;
@@ -274,292 +188,236 @@ async function fetchLinksGrouped(baseRef, commentatorEn){
   }
   return grouped;
 }
-
-// Best-effort sugya boundary lookup. The exact JSON shape of /api/passages
-// hasn't been verified against a live server, so this tries a few plausible
-// shapes and simply returns an empty map (no sugya breaks shown) if none fit —
-// it never breaks the rest of the render. Raw response is logged for anyone
-// who wants to tighten the parsing against the real payload.
+// Best-effort sugya boundaries; returns an empty map if the response shape is unexpected.
 async function fetchSugyaMap(refs){
   try {
-    const url = `${API}/passages/${encodeURIComponent(refs.join('|'))}`;
-    const data = await fetchJSON(url);
-    console.log('passages response for', refs, data);
+    const data = await fetchJSON(`${API}/passages/${encodeURIComponent(refs.join('|'))}`);
     const map = new Map();
-    const entries = Array.isArray(data)
-      ? data
-      : (data && typeof data === 'object'
-          ? Object.entries(data).map(([k, v]) => ({ ref: k, _val: v }))
-          : []);
+    const entries = Array.isArray(data) ? data
+      : (data && typeof data === 'object' ? Object.entries(data).map(([k,v]) => ({ ref:k, _val:v })) : []);
     for (const item of entries) {
       const inputRef = item.ref || item.requested_ref || item.input_ref;
       const v = item._val !== undefined ? item._val : item;
-      let passageRef = (v && (v.passage_ref || v.sugya_ref || v.passageRef || v.ref)) || null;
-      if (!passageRef && Array.isArray(v?.passages) && v.passages.length) {
-        passageRef = v.passages[0].ref || v.passages[0];
-      }
-      if (!passageRef && typeof v === 'string') passageRef = v;
-      if (inputRef && passageRef) map.set(normRef(inputRef), String(passageRef));
+      let pr = (v && (v.passage_ref || v.sugya_ref || v.passageRef || v.ref)) || null;
+      if (!pr && Array.isArray(v?.passages) && v.passages.length) pr = v.passages[0].ref || v.passages[0];
+      if (!pr && typeof v === 'string') pr = v;
+      if (inputRef && pr) map.set(normRef(inputRef), String(pr));
     }
     return map;
-  } catch (e) {
-    console.warn('Passages API unavailable or unexpected response shape — sugya breaks disabled for this load.', e);
-    return new Map();
+  } catch (e) { return new Map(); }
+}
+
+const nextAmud = (d,a) => a === 'a' ? {daf:d, amud:'b'} : {daf:d+1, amud:'a'};
+const prevAmud = (d,a) => a === 'b' ? {daf:d, amud:'a'} : (d <= 2 ? null : {daf:d-1, amud:'b'});
+
+// Returns rows for one amud (no wrapper, no heading): the page number is only a
+// margin label on the first gemara paragraph, so the text flows across pages.
+async function loadOneAmud(s, daf, amud, carry){
+  const loc = `${daf}${amud}`, baseRef = `${s.bookEn}.${loc}`;
+  const base = await fetchSegments(baseRef);
+  if (!base || !base.length) throw new NoTextError(baseRef);
+  const segRefs = base.map((_, i) => `${baseRef}.${i + 1}`);
+
+  const [oneToOne, sugyaMap] = await Promise.all([
+    fetchSegments(`${s.commentatorEn} on ${baseRef}`).then(c => c && c.length === base.length ? c : null).catch(() => null),
+    fetchSugyaMap(segRefs)
+  ]);
+  const grouped = oneToOne ? null : await fetchLinksGrouped(baseRef, s.commentatorEn);
+
+  let prev = carry != null ? carry : (sugyaMap.get(normRef(segRefs[0])) || null);
+  const firstSugya = prev;
+  const page = `${hebrewNumeral(daf)} ע״${amudLabel(amud)}`;
+  let html = '';
+  for (let i = 0; i < base.length; i++) {
+    const sug = sugyaMap.get(normRef(segRefs[i])) || null;
+    if (sug && sug !== prev) html += `<div class="sugya-break">❖</div>`;
+    if (sug) prev = sug;
+    let c;
+    if (oneToOne) c = oneToOne[i] || '<span class="empty">—</span>';
+    else { const pieces = grouped.get(normRef(segRefs[i])) || []; c = pieces.length ? pieces.join(' ') : '<span class="empty">אין פירוש מקושר</span>'; }
+    html += `<p class="gemara-p${i === 0 ? ' page-start' : ''}"${i === 0 ? ` data-page="${page}" data-daf="${daf}" data-amud="${amud}"` : ''}>${base[i]}</p><p class="comment-p">${c}</p>`;
   }
+  return { html, firstSugya, lastSugya: prev };
 }
 
-function amudLabel(amud){ return amud === 'a' ? 'א' : 'ב'; }
-
-function nextAmud(daf, amud){
-  return amud === 'a' ? { daf, amud: 'b' } : { daf: daf + 1, amud: 'a' };
-}
-function prevAmud(daf, amud){
-  if (amud === 'b') return { daf, amud: 'a' };
-  if (daf <= 2) return null; // page 1 doesn't exist in the standard pagination
-  return { daf: daf - 1, amud: 'b' };
-}
-
-// Fetches one amud (page-side), its matched commentary, and (best-effort)
-// its sugya breaks, and returns rendered HTML: a single flowing text per
-// column, paragraph-per-segment, with a plain divider wherever the sugya
-// changes. carryPrevSugya lets a caller say "this amud continues a sugya
-// that started on the previous page", suppressing a spurious break at the
-// very first segment.
-async function loadOneAmud(bookEn, bookHe, commentatorEn, commentatorHe, daf, amud, carryPrevSugya){
-  const loc = `${daf}${amud}`;
-  const baseRef = `${bookEn}.${loc}`;
-  const baseSegments = await fetchSegments(baseRef);
-  if (!baseSegments || !baseSegments.length) throw new Error('לא נמצא טקסט מקור עבור ' + baseRef);
-
-  const segRefs = baseSegments.map((_, i) => `${bookEn}.${loc}.${i + 1}`);
-
-  const commentaryRef = `${commentatorEn} on ${bookEn}.${loc}`;
-  let oneToOne = null;
-  try {
-    const commSegments = await fetchSegments(commentaryRef);
-    if (commSegments && commSegments.length === baseSegments.length) oneToOne = commSegments;
-  } catch (e) { /* fall through to links-based matching */ }
-
-  let grouped = null;
-  if (!oneToOne) grouped = await fetchLinksGrouped(baseRef, commentatorEn);
-
-  const sugyaMap = await fetchSugyaMap(segRefs);
-
-  let prevSugya = (carryPrevSugya !== undefined && carryPrevSugya !== null)
-    ? carryPrevSugya
-    : (sugyaMap.get(normRef(segRefs[0])) || null);
-  const firstSugya = prevSugya;
-
-  let rowsHtml = '';
-  for (let i = 0; i < baseSegments.length; i++) {
-    const segRef = segRefs[i];
-    const sugyaRef = sugyaMap.get(normRef(segRef)) || null;
-
-    if (sugyaRef && sugyaRef !== prevSugya) {
-      rowsHtml += `<div class="sugya-break"><span class="mark">❖</span></div>`;
-    }
-    if (sugyaRef) prevSugya = sugyaRef;
-
-    let commentaryHtml;
-    if (oneToOne) {
-      commentaryHtml = oneToOne[i] || '<span class="empty">—</span>';
-    } else {
-      const pieces = grouped.get(normRef(segRef)) || [];
-      commentaryHtml = pieces.length ? pieces.join(' ') : '<span class="empty">אין פירוש מקושר</span>';
-    }
-
-    rowsHtml += `
-      <p class="gemara-p">${baseSegments[i]}</p>
-      <p class="comment-p">${commentaryHtml}</p>`;
-  }
-
-  const heading = `<div class="amud-heading">${bookHe} — דף ${hebrewNumeral(daf)} עמוד ${amudLabel(amud)}</div>`;
-  const grid = `<div class="dual-grid"><div class="drag-handle"></div>${rowsHtml}</div>`;
-  return { html: heading + grid, firstSugya, lastSugya: prevSugya };
-}
-
-// ---- Scroll / pagination state ----
+// ---- state / scrolling ----
 let state = null;
-let topObserver = null;
-let bottomObserver = null;
+const grid = () => document.getElementById('grid');
+function setStatus(t, err){ const el = document.getElementById('status'); el.className = 'status error'; el.textContent = err ? t : ''; el.title = err ? t : ''; }
 
-function setStatus(text, isError){
-  const el = document.getElementById('status');
-  el.className = isError ? 'status error' : 'status';
-  el.textContent = text;
+// Scroll-driven and re-checked after every load, so a short page can never stall
+// the chain (the old IntersectionObserver only fired on visibility *changes*).
+let raf = 0;
+function schedule(){ if (!raf) raf = requestAnimationFrame(() => { raf = 0; check(); }); }
+// Keeps the form fields and the tab title on the amud currently at the top of the screen.
+function syncHeader(){
+  const ae = document.activeElement;
+  if (!state || (ae && ae.tagName === 'SELECT')) return;
+  const limit = document.querySelector('.controls').offsetHeight + 40;
+  let cur = null;
+  for (const el of grid().querySelectorAll('.page-start')) { if (el.getBoundingClientRect().top <= limit) cur = el; else break; }
+  if (!cur) cur = grid().querySelector('.page-start');
+  if (!cur || cur === state.cur) return;
+  state.cur = cur;
+  document.getElementById('daf').value = cur.dataset.daf;
+  document.getElementById('amud').value = cur.dataset.amud;
+  document.title = `${state.bookHe} ${cur.dataset.page} — גמרא ופירוש`;
 }
-
-function initObservers(){
-  const topSentinel = document.getElementById('topSentinel');
-  const bottomSentinel = document.getElementById('bottomSentinel');
-  if (topObserver) topObserver.disconnect();
-  if (bottomObserver) bottomObserver.disconnect();
-  topObserver = new IntersectionObserver((entries) => {
-    if (entries.some(e => e.isIntersecting)) loadPrevAmud();
-  }, { rootMargin: '1600px 0px 1600px 0px' });
-  bottomObserver = new IntersectionObserver((entries) => {
-    if (entries.some(e => e.isIntersecting)) loadNextAmud();
-  }, { rootMargin: '1600px 0px 1600px 0px' });
-  topObserver.observe(topSentinel);
-  bottomObserver.observe(bottomSentinel);
+function check(){
+  if (!state) return;
+  syncHeader();
+  const de = document.documentElement;
+  if (de.scrollHeight - window.scrollY - window.innerHeight < 2500) loadNext();
+  if (window.scrollY < 1500) loadPrev();
 }
+window.addEventListener('scroll', schedule, { passive: true });
+window.addEventListener('resize', () => { schedule(); clearTimeout(window._rt); window._rt = setTimeout(autoTune, 250); });
 
-function clearAmudContent(){
-  const top = document.getElementById('topSentinel');
-  const bottom = document.getElementById('bottomSentinel');
-  let node = top.nextSibling;
-  while (node && node !== bottom) {
-    const next = node.nextSibling;
-    node.remove();
-    node = next;
-  }
+function endNote(where, msg){
+  const html = `<div class="end-note">${msg}</div>`;
+  if (where === 'top') grid().insertAdjacentHTML('beforebegin', html);
+  else { document.getElementById('loadMoreRow').style.display = 'none'; document.getElementById('endTop').insertAdjacentHTML('beforebegin', html); }
 }
+function isEnd(err){ return err instanceof NoTextError || err.status === 400 || err.status === 404; }
 
-function showEndNote(edge, message){
-  if (edge === 'top') {
-    if (topObserver) topObserver.disconnect();
-    document.getElementById('topSentinel').insertAdjacentHTML('afterend', `<div class="end-note">${message}</div>`);
-  } else {
-    if (bottomObserver) bottomObserver.disconnect();
-    document.getElementById('loadMoreRow').style.display = 'none';
-    document.getElementById('bottomSentinel').insertAdjacentHTML('beforebegin', `<div class="end-note">${message}</div>`);
-  }
-}
-
-async function loadNextAmud(){
-  if (!state || state.bottomLoading || state.bottomEnded) return;
-  state.bottomLoading = true;
-  setStatus('טוען את העמוד הבא…');
+async function loadNext(){
+  const s = state;
+  if (!s || s.bLoading || s.bEnded) return;
+  s.bLoading = true;
   try {
-    const { html, lastSugya } = await loadOneAmud(
-      state.bookEn, state.bookHe, state.commentatorEn, state.commentatorHe,
-      state.bottomDaf, state.bottomAmud, state.bottomSugya
-    );
-    document.getElementById('bottomSentinel').insertAdjacentHTML('beforebegin', html);
-    setStatus(`נטען: ${state.bookHe}, דף ${hebrewNumeral(state.bottomDaf)} עמוד ${amudLabel(state.bottomAmud)}.`);
-    const next = nextAmud(state.bottomDaf, state.bottomAmud);
-    state.bottomDaf = next.daf;
-    state.bottomAmud = next.amud;
-    state.bottomSugya = lastSugya;
+    const r = await loadOneAmud(s, s.bDaf, s.bAmud, s.bSugya);
+    if (s !== state) return;
+    grid().insertAdjacentHTML('beforeend', r.html);
+    setStatus(`נטען עד דף ${hebrewNumeral(s.bDaf)} עמוד ${amudLabel(s.bAmud)}`);
+    const n = nextAmud(s.bDaf, s.bAmud); s.bDaf = n.daf; s.bAmud = n.amud; s.bSugya = r.lastSugya;
+    document.getElementById('loadMore').textContent = 'טען את העמוד הבא';
   } catch (err) {
-    state.bottomEnded = true;
-    showEndNote('bottom', 'הגעתם לסוף הטקסט הזמין (או שהדף המבוקש לא קיים במסכת זו).');
+    if (s !== state) return;
+    if (isEnd(err)) { s.bEnded = true; endNote('bottom', 'הגעתם לסוף הטקסט הזמין.'); }
+    else { s.bPaused = true; setStatus('שגיאת רשת — לחצו כדי לנסות שוב (' + err.message + ')', true); document.getElementById('loadMore').textContent = 'נסה שוב'; }
   } finally {
-    state.bottomLoading = false;
+    s.bLoading = false;
+    if (s === state && !s.bEnded && !s.bPaused) schedule();
   }
 }
 
-// Prepends the previous amud above the currently-topmost content. Keeps the
-// visible scroll position stable by compensating for the added height, so
-// content appearing above doesn't shove the reader's current spot down the
-// screen.
-async function loadPrevAmud(){
-  if (!state || state.topLoading || state.topEnded) return;
-  state.topLoading = true;
+async function loadPrev(){
+  const s = state;
+  if (!s || s.tLoading || s.tEnded || s.tPaused) return;
+  s.tLoading = true;
   try {
-    const { html, firstSugya, lastSugya } = await loadOneAmud(
-      state.bookEn, state.bookHe, state.commentatorEn, state.commentatorHe,
-      state.topDaf, state.topAmud, null
-    );
-    const continuesSameSugya = !!(lastSugya && state.topSugya && lastSugya === state.topSugya);
-    const insertHtml = html + (continuesSameSugya ? '' : '<div class="sugya-break"><span class="mark">❖</span></div>');
-
-    const prevScrollHeight = document.documentElement.scrollHeight;
-    const prevScrollTop = window.scrollY;
-    document.getElementById('topSentinel').insertAdjacentHTML('afterend', insertHtml);
-    const addedHeight = document.documentElement.scrollHeight - prevScrollHeight;
-    window.scrollTo(0, prevScrollTop + addedHeight);
-
-    state.topSugya = firstSugya;
-    const prev = prevAmud(state.topDaf, state.topAmud);
-    if (!prev) {
-      state.topEnded = true;
-      showEndNote('top', 'זו תחילת המסכת.');
-    } else {
-      state.topDaf = prev.daf;
-      state.topAmud = prev.amud;
-    }
+    const r = await loadOneAmud(s, s.tDaf, s.tAmud, null);
+    if (s !== state) return;
+    const same = !!(r.lastSugya && s.tSugya && r.lastSugya === s.tSugya);
+    const h0 = document.documentElement.scrollHeight, y0 = window.scrollY;
+    grid().insertAdjacentHTML('afterbegin', r.html + (same ? '' : '<div class="sugya-break">❖</div>'));
+    window.scrollTo(0, y0 + document.documentElement.scrollHeight - h0);
+    s.tSugya = r.firstSugya;
+    const p = prevAmud(s.tDaf, s.tAmud);
+    if (!p) { s.tEnded = true; endNote('top', 'זו תחילת המסכת.'); } else { s.tDaf = p.daf; s.tAmud = p.amud; }
   } catch (err) {
-    state.topEnded = true;
+    if (s !== state) return;
+    if (isEnd(err)) s.tEnded = true; else s.tPaused = true;
   } finally {
-    state.topLoading = false;
+    s.tLoading = false;
+    if (s === state && !s.tEnded && !s.tPaused) schedule();
   }
+}
+
+// ---- default column width, computed on the client ----
+// Tries a range of splits and measures each row (row height = taller of the two
+// cells). Among splits whose total height is within 10% of the best, picks the
+// one leaving the least empty space under the Gemara text.
+function autoTune(){
+  if (!state || state.userSized || window.innerWidth <= 640) return;
+  const pairs = [...grid().querySelectorAll('.gemara-p')].slice(0, 80)
+    .map(g => [g, g.nextElementSibling]).filter(([, c]) => c && c.classList.contains('comment-p'));
+  if (!pairs.length) return;
+  const root = document.documentElement, results = [];
+  for (let p = 30; p <= 72; p += 2) {
+    root.style.setProperty('--gemara-pct', p + '%');
+    let tot = 0, slack = 0;
+    for (const [g, c] of pairs) { const a = g.offsetHeight, b = c.offsetHeight; tot += Math.max(a, b); slack += Math.max(0, b - a); }
+    results.push({ p, tot, slack });
+  }
+  const min = Math.min(...results.map(r => r.tot));
+  const best = results.filter(r => r.tot <= min * 1.1).sort((a, b) => a.slack - b.slack || b.p - a.p)[0];
+  root.style.setProperty('--gemara-pct', best.p + '%');
 }
 
 async function load(){
-  const bookEn = document.getElementById('book').value;
-  const bookHe = document.getElementById('book').selectedOptions[0].textContent;
-  const commentatorEn = document.getElementById('commentator').value;
-  const commentatorHe = document.getElementById('commentator').selectedOptions[0].textContent;
-  const daf = parseInt(document.getElementById('daf').value, 10);
-  const amud = document.getElementById('amud').value;
-  const btn = document.getElementById('load');
-
-  clearAmudContent();
-  document.getElementById('loadMoreRow').style.display = 'flex';
-  btn.disabled = true;
-  setStatus('טוען…');
-
-  state = {
-    bookEn, bookHe, commentatorEn, commentatorHe,
-    bottomDaf: null, bottomAmud: null, bottomSugya: null, bottomLoading: false, bottomEnded: false,
-    topDaf: null, topAmud: null, topSugya: null, topLoading: false, topEnded: false
+  const $ = id => document.getElementById(id);
+  const s = {
+    bookEn: $('book').value, bookHe: $('book').selectedOptions[0].textContent,
+    commentatorEn: $('commentator').value,
+    bDaf: null, bAmud: null, bSugya: null, bLoading: false, bEnded: false, bPaused: false,
+    tDaf: null, tAmud: null, tSugya: null, tLoading: false, tEnded: false, tPaused: false,
+    userSized: false
   };
-
+  const daf = parseInt($('daf').value, 10), amud = $('amud').value, btn = $('load');
+  state = null;
+  document.querySelectorAll('.end-note').forEach(n => n.remove());
+  grid().querySelectorAll(':scope > :not(.drag-handle)').forEach(n => n.remove());
+  $('loadMoreRow').style.display = 'flex';
+  btn.disabled = true; setStatus('טוען…');
   try {
-    const { html, firstSugya, lastSugya } = await loadOneAmud(bookEn, bookHe, commentatorEn, commentatorHe, daf, amud, null);
-    document.getElementById('topSentinel').insertAdjacentHTML('afterend', html);
-    initObservers();
-    setStatus(`נטען: ${bookHe}, דף ${hebrewNumeral(daf)} עמוד ${amudLabel(amud)}. אפשר לגלול כדי להמשיך בשני הכיוונים.`);
-
-    const next = nextAmud(daf, amud);
-    state.bottomDaf = next.daf;
-    state.bottomAmud = next.amud;
-    state.bottomSugya = lastSugya;
-
-    const prev = prevAmud(daf, amud);
-    if (!prev) state.topEnded = true;
-    else { state.topDaf = prev.daf; state.topAmud = prev.amud; }
-    state.topSugya = firstSugya;
+    const r = await loadOneAmud(s, daf, amud, null);
+    grid().insertAdjacentHTML('beforeend', r.html);
+    const n = nextAmud(daf, amud); s.bDaf = n.daf; s.bAmud = n.amud; s.bSugya = r.lastSugya;
+    const p = prevAmud(daf, amud);
+    if (!p) s.tEnded = true; else { s.tDaf = p.daf; s.tAmud = p.amud; }
+    s.tSugya = r.firstSugya;
+    state = s;
+    await (document.fonts ? document.fonts.ready : Promise.resolve());
+    autoTune();
+    setStatus(`${s.bookHe}, דף ${hebrewNumeral(daf)} עמוד ${amudLabel(amud)}`);
+    window.scrollTo(0, 0);
+    schedule();
   } catch (err) {
-    setStatus('שגיאה: ' + err.message, true);
-    console.error(err);
-  } finally {
-    btn.disabled = false;
-  }
+    setStatus('שגיאה: ' + (err instanceof NoTextError ? 'לא נמצא טקסט עבור ' + err.message : err.message), true);
+  } finally { btn.disabled = false; }
 }
 
-// ---- Draggable column split (event delegation so it works for handles
-// added later by infinite scroll, without re-binding listeners each time) ----
-document.addEventListener('pointerdown', (e) => {
+// ---- draggable split (delegated; touch-action:pan-y keeps vertical scroll working) ----
+document.addEventListener('pointerdown', e => {
   const handle = e.target.closest('.drag-handle');
-  if (!handle) return;
-  const grid = handle.closest('.dual-grid');
-  if (!grid) return;
-  const rect = grid.getBoundingClientRect();
+  if (!handle || !state) return;
+  const rect = grid().getBoundingClientRect();
   handle.setPointerCapture(e.pointerId);
   document.body.classList.add('resizing-columns');
+  state.userSized = true;
   e.preventDefault();
-
-  function onMove(ev){
-    const relX = ev.clientX - rect.left;
-    const commentPct = Math.min(80, Math.max(20, (relX / rect.width) * 100));
+  const move = ev => {
+    const commentPct = Math.min(75, Math.max(20, ((ev.clientX - rect.left + 11) / rect.width) * 100));
     document.documentElement.style.setProperty('--gemara-pct', (100 - commentPct) + '%');
-  }
-  function onUp(ev){
-    try { handle.releasePointerCapture(ev.pointerId); } catch (err) {}
+  };
+  const up = ev => {
+    try { handle.releasePointerCapture(ev.pointerId); } catch (_) {}
     document.body.classList.remove('resizing-columns');
-    window.removeEventListener('pointermove', onMove);
-    window.removeEventListener('pointerup', onUp);
-  }
-  window.addEventListener('pointermove', onMove);
-  window.addEventListener('pointerup', onUp);
+    window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up);
+  };
+  window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
 });
+
+// Keep the screen awake while the page is open (Screen Wake Lock API; re-acquired when the tab returns).
+let wl = null, wlBusy = false;
+async function keepAwake(){
+  if (wl || wlBusy || !('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+  wlBusy = true;
+  try { wl = await navigator.wakeLock.request('screen'); wl.addEventListener('release', () => { wl = null; }); } catch (_) {}
+  wlBusy = false;
+}
+document.addEventListener('visibilitychange', keepAwake);
+['pointerdown', 'touchstart', 'keydown'].forEach(ev => window.addEventListener(ev, keepAwake, { passive: true }));
+keepAwake();
 
 populateSelects();
 document.getElementById('book').addEventListener('change', populateDafSelect);
 document.getElementById('load').addEventListener('click', load);
-document.getElementById('loadMore').addEventListener('click', loadNextAmud);
+document.getElementById('loadMore').addEventListener('click', () => {
+  if (!state) return;
+  state.bPaused = false; state.tPaused = false; loadNext();
+});
 load();
 </script>
 </body>
