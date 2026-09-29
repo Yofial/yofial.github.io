@@ -1,0 +1,16 @@
+{
+  "name": "גמרא ופירוש, שורה מול שורה",
+  "short_name": "גמרא",
+  "description": "גמרא ופירוש שורה מול שורה, מבוסס על Sefaria API",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2ead9",
+  "theme_color": "#5b3a29",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

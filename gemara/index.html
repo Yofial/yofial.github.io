@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <title>גמרא ופירוש, שורה מול שורה — הדגמת Sefaria API</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.85em' font-size='85'>📜</text></svg>">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#5b3a29">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Heebo:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -18,7 +22,7 @@
   body{margin:0;background:var(--paper);color:var(--ink);font-family:'Heebo',sans-serif;padding:0 1rem 3rem;}
   body.resizing-columns{user-select:none;cursor:col-resize;}
   .panel{max-width:1440px;margin:0 auto;}
-  .logo{width:1.7rem;height:1.7rem;flex:none;border-radius:7px;}
+  .logo{width:1.9rem;height:1.9rem;flex:none;}
 
   /* compact sticky form */
   .controls{
@@ -45,7 +49,7 @@
 
   /* one continuous grid; margin on the inline-start side holds the page labels */
   .dual-grid{
-    position:relative;margin-inline-start:3.2rem;
+    position:relative;margin-inline-start:4.6rem;
     display:grid;grid-template-columns:var(--gemara-pct) 1fr;column-gap:1.4rem;align-items:start;
   }
   .drag-handle{
@@ -59,27 +63,53 @@
   .comment-p{color:var(--comment);font-size:1rem;line-height:1.75;}
   .comment-p .empty{color:#a89b83;font-style:italic;font-size:.88rem;}
   .gemara-p.page-start::before{
-    content:attr(data-page);position:absolute;inset-inline-start:-3rem;width:2.5rem;top:.35rem;
+    content:attr(data-page);position:absolute;inset-inline-start:-4.4rem;width:2.4rem;top:.35rem;
     font:500 .72rem/1.25 'Heebo',sans-serif;color:var(--ink-soft);
   }
-  .sugya-break{grid-column:1 / -1;text-align:center;color:var(--accent);font-size:.75rem;opacity:.7;margin:.5rem 0 .7rem;}
+  .gemara-p.page-start.cur::before{color:var(--accent);font-weight:700;}
+  /* One bar per amud in the margin: the track is the amud's extent, the fill is how far you have read. */
+  .amud-bar{position:absolute;inset-inline-start:-1.5rem;width:3px;border-radius:2px;background:var(--line);opacity:.8;pointer-events:none;overflow:hidden;}
+  .amud-bar i{display:block;width:100%;height:0;background:var(--accent);opacity:.6;}
+  .cell-head{display:block;text-align:center;margin:.3rem 0 .35rem;color:var(--accent);line-height:1.5;}
+  .cell-head big{font-size:1.15em;}
+  .sugya-break{display:block;text-align:center;color:var(--accent);font-size:.75rem;opacity:.7;margin:.2rem 0 .5rem;}
   .end-note{text-align:center;color:var(--ink-soft);font-size:.85rem;padding:1rem 0;}
+  .end-mark{display:flex;align-items:center;gap:.8rem;color:var(--accent);opacity:.75;font-size:1.1rem;padding:1.5rem 0 .5rem;}
+  .end-mark::before,.end-mark::after{content:"";flex:1;border-top:1px solid var(--line);}
   .load-more-row{display:flex;justify-content:center;margin:1rem 0 2rem;}
   footer{max-width:1440px;margin:2rem auto 0;font-size:.8rem;color:var(--ink-soft);line-height:1.7;}
   footer a{color:var(--accent);}
-  @media (max-width:640px){
-    .dual-grid{grid-template-columns:1fr;margin-inline-start:2.6rem;}
-    .gemara-p.page-start::before{inset-inline-start:-2.6rem;width:2.2rem;}
+  @media screen and (max-width:640px){
+    .dual-grid{grid-template-columns:1fr;margin-inline-start:3.4rem;}
+    .gemara-p.page-start::before{inset-inline-start:-3.3rem;width:1.7rem;}
+    .amud-bar{inset-inline-start:-1.2rem;}
     .comment-p{border-top:1px dashed var(--line);padding-top:.4rem;margin-bottom:.8rem;}
     .drag-handle{display:none;}
     #book,#commentator{flex:1 1 5rem;} #daf,#amud{flex:0 0 auto;}
+  }
+  /* Print: no form or JS-drawn bars; amud extent is drawn with borders (backgrounds are dropped by default).
+     Amud a = single line, amud b = double line, with a corner tick and bold label where each amud starts. */
+  @media print{
+    @page{margin:1.4cm;}
+    :root{--gemara:#000;--comment:#000;--accent:#000;--ink:#000;--ink-soft:#000;--line:#777;}
+    html,body{background:#fff;}
+    body{padding:0;}
+    .controls,.load-more-row,.drag-handle,.amud-bar{display:none !important;}
+    .gemara-p,.comment-p{orphans:3;widows:3;}
+    .gemara-p{align-self:stretch;}
+    .gemara-p::after{content:"";position:absolute;top:0;bottom:-.45rem;inset-inline-start:-1.5rem;border-inline-start:2px solid #000;}
+    .gemara-p.am-b::after{border-inline-start:5px double #000;}
+    .gemara-p.page-start::after{top:.3rem;width:.6rem;border-top:2px solid #000;}
+    .gemara-p.page-start::before{font-size:.8rem;font-weight:700;color:#000;}
+    .sugya-break{opacity:1;}
+    .cell-head{break-after:avoid;}
   }
 </style>
 </head>
 <body>
 <div class="panel">
   <div class="controls">
-    <img class="logo" alt="" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='9' fill='%235b3a29'/><text x='20' y='29' font-size='26' text-anchor='middle' fill='%23f2ead9' font-family='serif'>ג</text></svg>">
+    <img class="logo" alt="" src="icon.svg">
     <select id="book" aria-label="מסכת"></select>
     <select id="daf" aria-label="דף"></select>
     <select id="amud" aria-label="עמוד"><option value="a">עמוד א</option><option value="b">עמוד ב</option></select>
@@ -207,6 +237,20 @@ async function fetchSugyaMap(refs){
   } catch (e) { return new Map(); }
 }
 
+// A leading <big> is a heading (גמ׳, מתני׳, הדרן…, or a section number in the commentary).
+// Sefaria glues it to the following text, so lift it into its own block inside the same cell.
+// In the gemara a leading <big> that isn't a one-word marker is an inline emphasis and stays put.
+const LEAD_BIG = /^\s*(?:<strong>\s*)?<big>([\s\S]*?)<\/big>(?:\s*<\/strong>)?\s*/;
+function splitHead(seg, anyBig){
+  const m = LEAD_BIG.exec(seg || '');
+  if (!m) return { head: '', rest: seg || '' };
+  const rest = seg.slice(m[0].length).trim();
+  const plain = m[1].replace(/<[^>]*>/g, '').replace(/[\u0591-\u05C7]/g, '').trim();
+  if (!anyBig && rest && !/^[^\s׳'’]+[׳'’]$/.test(plain)) return { head: '', rest: seg };
+  return { head: `<span class="cell-head">${m[0].trim()}</span>`, rest };
+}
+
+const SUGYA_BREAK = '<span class="sugya-break">❖</span>';
 const nextAmud = (d,a) => a === 'a' ? {daf:d, amud:'b'} : {daf:d+1, amud:'a'};
 const prevAmud = (d,a) => a === 'b' ? {daf:d, amud:'a'} : (d <= 2 ? null : {daf:d-1, amud:'b'});
 
@@ -230,12 +274,17 @@ async function loadOneAmud(s, daf, amud, carry){
   let html = '';
   for (let i = 0; i < base.length; i++) {
     const sug = sugyaMap.get(normRef(segRefs[i])) || null;
-    if (sug && sug !== prev) html += `<div class="sugya-break">❖</div>`;
+    const brk = sug && sug !== prev ? SUGYA_BREAK : '';
     if (sug) prev = sug;
     let c;
-    if (oneToOne) c = oneToOne[i] || '<span class="empty">—</span>';
-    else { const pieces = grouped.get(normRef(segRefs[i])) || []; c = pieces.length ? pieces.join(' ') : '<span class="empty">אין פירוש מקושר</span>'; }
-    html += `<p class="gemara-p${i === 0 ? ' page-start' : ''}"${i === 0 ? ` data-page="${page}" data-daf="${daf}" data-amud="${amud}"` : ''}>${base[i]}</p><p class="comment-p">${c}</p>`;
+    if (oneToOne) c = oneToOne[i] || '';
+    else c = (grouped.get(normRef(segRefs[i])) || []).join(' ');
+    const g = splitHead(base[i], false), k = splitHead(c, true);
+    const gemara = brk + g.head + g.rest;
+    const comment = k.head + k.rest || (oneToOne ? '<span class="empty">—</span>' : '<span class="empty">אין פירוש מקושר</span>');
+    // A marker-only line (e.g. הדרן) has no commentary, so leave that cell blank instead of a placeholder.
+    const blank = g.head && !g.rest && !c;
+    html += `<p class="gemara-p am-${amud}${i === 0 ? ' page-start' : ''}"${i === 0 ? ` data-page="${page}" data-daf="${daf}" data-amud="${amud}"` : ''}>${gemara}</p><p class="comment-p">${blank ? '' : comment}</p>`;
   }
   return { html, firstSugya, lastSugya: prev };
 }
@@ -259,6 +308,8 @@ function syncHeader(){
   if (!cur) cur = grid().querySelector('.page-start');
   if (!cur || cur === state.cur) return;
   state.cur = cur;
+  grid().querySelectorAll('.page-start.cur').forEach(el => el.classList.remove('cur'));
+  cur.classList.add('cur');
   document.getElementById('daf').value = cur.dataset.daf;
   document.getElementById('amud').value = cur.dataset.amud;
   document.title = `${state.bookHe} ${cur.dataset.page} — גמרא ופירוש`;
@@ -266,6 +317,7 @@ function syncHeader(){
 function check(){
   if (!state) return;
   syncHeader();
+  updateBars();
   const de = document.documentElement;
   if (de.scrollHeight - window.scrollY - window.innerHeight < 2500) loadNext();
   if (window.scrollY < 1500) loadPrev();
@@ -273,8 +325,31 @@ function check(){
 window.addEventListener('scroll', schedule, { passive: true });
 window.addEventListener('resize', () => { schedule(); clearTimeout(window._rt); window._rt = setTimeout(autoTune, 250); });
 
+// ---- amud bars (margin navigation) ----
+let bars = [];
+function layoutBars(){
+  const g = grid(), starts = [...g.querySelectorAll('.page-start')];
+  bars = bars.filter(b => b.isConnected);
+  while (bars.length > starts.length) bars.pop().remove();
+  while (bars.length < starts.length) { const b = document.createElement('div'); b.className = 'amud-bar'; b.innerHTML = '<i></i>'; g.appendChild(b); bars.push(b); }
+  starts.forEach((el, i) => {
+    const top = el.offsetTop, end = i + 1 < starts.length ? starts[i + 1].offsetTop : g.offsetHeight;
+    Object.assign(bars[i].style, { top: top + 'px', height: Math.max(0, end - top - 4) + 'px' });
+  });
+  updateBars();
+}
+function updateBars(){
+  if (!bars.length) return;
+  const y = window.scrollY + document.querySelector('.controls').offsetHeight + 40 - (grid().getBoundingClientRect().top + window.scrollY);
+  for (const b of bars) {
+    const top = parseFloat(b.style.top), h = parseFloat(b.style.height) || 1;
+    b.firstChild.style.height = Math.min(1, Math.max(0, (y - top) / h)) * 100 + '%';
+  }
+}
+new ResizeObserver(layoutBars).observe(document.getElementById('grid'));
+
 function endNote(where, msg){
-  const html = `<div class="end-note">${msg}</div>`;
+  const html = where === 'top' ? `<div class="end-note">${msg}</div>` : '<div class="end-note end-mark" role="separator" aria-hidden="true">❦</div>';
   if (where === 'top') grid().insertAdjacentHTML('beforebegin', html);
   else { document.getElementById('loadMoreRow').style.display = 'none'; document.getElementById('endTop').insertAdjacentHTML('beforebegin', html); }
 }
@@ -288,12 +363,13 @@ async function loadNext(){
     const r = await loadOneAmud(s, s.bDaf, s.bAmud, s.bSugya);
     if (s !== state) return;
     grid().insertAdjacentHTML('beforeend', r.html);
+    layoutBars();
     setStatus(`נטען עד דף ${hebrewNumeral(s.bDaf)} עמוד ${amudLabel(s.bAmud)}`);
     const n = nextAmud(s.bDaf, s.bAmud); s.bDaf = n.daf; s.bAmud = n.amud; s.bSugya = r.lastSugya;
     document.getElementById('loadMore').textContent = 'טען את העמוד הבא';
   } catch (err) {
     if (s !== state) return;
-    if (isEnd(err)) { s.bEnded = true; endNote('bottom', 'הגעתם לסוף הטקסט הזמין.'); }
+    if (isEnd(err)) { s.bEnded = true; endNote('bottom'); }
     else { s.bPaused = true; setStatus('שגיאת רשת — לחצו כדי לנסות שוב (' + err.message + ')', true); document.getElementById('loadMore').textContent = 'נסה שוב'; }
   } finally {
     s.bLoading = false;
@@ -310,7 +386,9 @@ async function loadPrev(){
     if (s !== state) return;
     const same = !!(r.lastSugya && s.tSugya && r.lastSugya === s.tSugya);
     const h0 = document.documentElement.scrollHeight, y0 = window.scrollY;
-    grid().insertAdjacentHTML('afterbegin', r.html + (same ? '' : '<div class="sugya-break">❖</div>'));
+    if (!same) grid().querySelector('.gemara-p')?.insertAdjacentHTML('afterbegin', SUGYA_BREAK);
+    grid().insertAdjacentHTML('afterbegin', r.html);
+    layoutBars();
     window.scrollTo(0, y0 + document.documentElement.scrollHeight - h0);
     s.tSugya = r.firstSugya;
     const p = prevAmud(s.tDaf, s.tAmud);
@@ -419,6 +497,8 @@ document.getElementById('loadMore').addEventListener('click', () => {
   state.bPaused = false; state.tPaused = false; loadNext();
 });
 load();
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
 </html>

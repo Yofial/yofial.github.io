@@ -1,0 +1,68 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8a5a3e"/>
+      <stop offset=".55" stop-color="#5b3a29"/>
+      <stop offset="1" stop-color="#2e1b11"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".3" cy=".18" r=".75">
+      <stop offset="0" stop-color="#fff3d6" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#fff3d6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2=".35" y2="1">
+      <stop offset="0" stop-color="#fdf8ec"/>
+      <stop offset="1" stop-color="#eadcb9"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6e4631"/>
+      <stop offset="1" stop-color="#4a2d1f"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e9c46a" stop-opacity=".25"/>
+      <stop offset=".5" stop-color="#e9c46a" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#e9c46a" stop-opacity=".25"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#150a04" flood-opacity=".5"/>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="112" fill="url(#glow)"/>
+  <rect x="16" y="16" width="480" height="480" rx="98" fill="none" stroke="#e9c46a" stroke-opacity=".35" stroke-width="3"/>
+
+  <g filter="url(#shadow)">
+    <rect x="92" y="76" width="328" height="360" rx="20" transform="rotate(-6 256 256)" fill="#cdb88d"/>
+    <rect x="92" y="76" width="328" height="360" rx="20" transform="rotate(3.5 256 256)" fill="#e0cfa8"/>
+    <rect x="92" y="76" width="328" height="360" rx="20" fill="url(#paper)" stroke="#d8c9a0" stroke-width="2"/>
+  </g>
+
+  <!-- line-against-line highlight -->
+  <rect x="184" y="244" width="212" height="20" rx="10" fill="url(#gold)"/>
+
+  <!-- opening-word plate with ×’ -->
+  <rect x="200" y="104" width="112" height="68" rx="7" fill="url(#plate)"/>
+  <rect x="206" y="110" width="100" height="56" rx="4" fill="none" stroke="#e9c46a" stroke-width="1.8" stroke-opacity=".85"/>
+  <g fill="none" stroke="#f6ecd4" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M245 121H261V155H269"/>
+    <path d="M261 145L248 158"/>
+  </g>
+
+  <!-- gemara -->
+  <path fill="none" stroke="#1c2a3a" stroke-width="9" stroke-linecap="round"
+    d="M319 194H193M319 214H193M319 234H193M319 254H193M319 274H193M319 294H193M319 314H232"/>
+
+  <!-- commentaries wrapping the gemara -->
+  <g fill="none" stroke="#4a3222" stroke-linecap="round">
+    <path stroke-width="8.5" d="M389 111H366M389 202H370M389 293H374M177 111H150M177 241H156M249 384H226"/>
+    <path stroke-width="6" stroke-opacity=".78"
+      d="M358 111H335M389 124H335M389 137H335M389 150H335M389 163H335M389 176H335M389 189H352
+         M362 202H335M389 215H335M389 228H335M389 241H335M389 254H335M389 267H335M389 280H346
+         M366 293H335M389 306H335M389 319H335
+         M142 111H123M177 124H123M177 137H123M177 150H123M177 163H123M177 176H123M177 189H123
+         M177 202H123M177 215H123M177 228H140M148 241H123M177 254H123M177 267H123M177 280H123
+         M177 293H123M177 306H123M177 319H123
+         M389 332H263M389 345H263M389 358H263M389 371H263M389 384H263M389 397H300
+         M249 332H123M249 345H123M249 358H123M249 371H170M218 384H123M249 397H150"/>
+  </g>
+</svg>
