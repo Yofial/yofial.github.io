@@ -16,6 +16,7 @@
     --paper:#f2ead9;--paper-edge:#e4d8b8;--ink:#26221c;--ink-soft:#665c48;
     --gemara:#1c2a3a;--comment:#4a3222;--accent:#5b3a29;--accent-strong:#2f5233;
     --line:#d8c9a0;--gemara-pct:50%;
+    --mark:#6a604f;--track:rgba(102,92,72,.15);--bar-w:10px;--bar-x:-5.2rem;
   }
   *{box-sizing:border-box;}
   html{overflow-anchor:none;}
@@ -44,14 +45,15 @@
   button:disabled{opacity:.5;cursor:wait;}
   button.secondary{background:transparent;color:var(--accent);border:1px solid var(--accent);}
   button.secondary:hover{background:var(--paper-edge);}
+  button.icon{display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--accent);padding:.25rem .35rem;}
+  button.icon:hover{background:var(--paper-edge);}
+  button.icon svg{width:1.25rem;height:1.25rem;}
   .status{flex:1;min-width:0;font-size:.75rem;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .status.error{color:#8a2e2e;}
 
-  /* one continuous grid; margin on the inline-start side holds the page labels */
-  .dual-grid{
-    position:relative;margin-inline-start:4.6rem;
-    display:grid;grid-template-columns:var(--gemara-pct) 1fr;column-gap:1.4rem;align-items:start;
-  }
+  /* one wrapper per amud, all with the same columns so they line up; margin on the inline-start side holds the page labels */
+  .dual-grid{position:relative;margin-inline-start:5.4rem;}
+  .amud{position:relative;display:grid;grid-template-columns:var(--gemara-pct) 1fr;column-gap:1.4rem;align-items:start;}
   .drag-handle{
     position:absolute;top:0;bottom:0;left:calc(100% - var(--gemara-pct) - .7rem);width:1.4rem;
     cursor:col-resize;z-index:4;touch-action:pan-y;
@@ -63,13 +65,14 @@
   .comment-p{color:var(--comment);font-size:1rem;line-height:1.75;}
   .comment-p .empty{color:#a89b83;font-style:italic;font-size:.88rem;}
   .gemara-p.page-start::before{
-    content:attr(data-page);position:absolute;inset-inline-start:-4.4rem;width:2.4rem;top:.35rem;
+    content:attr(data-page);position:absolute;inset-inline-start:-4.2rem;width:2.4rem;top:.35rem;
     font:500 .72rem/1.25 'Heebo',sans-serif;color:var(--ink-soft);
   }
   .gemara-p.page-start.cur::before{color:var(--accent);font-weight:700;}
-  /* One bar per amud in the margin: the track is the amud's extent, the fill is how far you have read. */
-  .amud-bar{position:absolute;inset-inline-start:-1.5rem;width:3px;border-radius:2px;background:var(--line);opacity:.8;pointer-events:none;overflow:hidden;}
-  .amud-bar i{display:block;width:100%;height:0;background:var(--accent);opacity:.6;}
+  /* Amud progress: a full-width track, filled from empty at the amud's start to full at its end (drawn by drawBar). */
+  .amud-bar{position:absolute;top:0;height:100%;inset-inline-start:var(--bar-x);width:var(--bar-w);pointer-events:none;}
+  .amud-bar rect{fill:var(--track);}
+  .amud-bar path{fill:var(--mark);}
   .cell-head{display:block;text-align:center;margin:.3rem 0 .35rem;color:var(--accent);line-height:1.5;}
   .cell-head big{font-size:1.15em;}
   .sugya-break{display:block;text-align:center;color:var(--accent);font-size:.75rem;opacity:.7;margin:.2rem 0 .5rem;}
@@ -80,26 +83,21 @@
   footer{max-width:1440px;margin:2rem auto 0;font-size:.8rem;color:var(--ink-soft);line-height:1.7;}
   footer a{color:var(--accent);}
   @media screen and (max-width:640px){
-    .dual-grid{grid-template-columns:1fr;margin-inline-start:3.4rem;}
-    .gemara-p.page-start::before{inset-inline-start:-3.3rem;width:1.7rem;}
-    .amud-bar{inset-inline-start:-1.2rem;}
+    .dual-grid{margin-inline-start:4.2rem;}
+    .amud{grid-template-columns:1fr;}
+    :root{--bar-w:8px;--bar-x:-4.1rem;}
+    .gemara-p.page-start::before{inset-inline-start:-3.4rem;width:1.7rem;}
     .comment-p{border-top:1px dashed var(--line);padding-top:.4rem;margin-bottom:.8rem;}
     .drag-handle{display:none;}
     #book,#commentator{flex:1 1 5rem;} #daf,#amud{flex:0 0 auto;}
   }
-  /* Print: no form or JS-drawn bars; amud extent is drawn with borders (backgrounds are dropped by default).
-     Amud a = single line, amud b = double line, with a corner tick and bold label where each amud starts. */
   @media print{
     @page{margin:1.4cm;}
-    :root{--gemara:#000;--comment:#000;--accent:#000;--ink:#000;--ink-soft:#000;--line:#777;}
+    :root{--gemara:#000;--comment:#000;--accent:#000;--ink:#000;--ink-soft:#000;--line:#777;--mark:#000;--track:#d6d6d6;}
     html,body{background:#fff;}
     body{padding:0;}
-    .controls,.load-more-row,.drag-handle,.amud-bar{display:none !important;}
+    .controls,.load-more-row,.drag-handle{display:none !important;}
     .gemara-p,.comment-p{orphans:3;widows:3;}
-    .gemara-p{align-self:stretch;}
-    .gemara-p::after{content:"";position:absolute;top:0;bottom:-.45rem;inset-inline-start:-1.5rem;border-inline-start:2px solid #000;}
-    .gemara-p.am-b::after{border-inline-start:5px double #000;}
-    .gemara-p.page-start::after{top:.3rem;width:.6rem;border-top:2px solid #000;}
     .gemara-p.page-start::before{font-size:.8rem;font-weight:700;color:#000;}
     .sugya-break{opacity:1;}
     .cell-head{break-after:avoid;}
@@ -116,6 +114,9 @@
     <select id="commentator" aria-label="פירוש"></select>
     <button id="load">טען</button>
     <span class="status" id="status" role="status"></span>
+    <button class="icon" id="print" type="button" aria-label="הדפסה" title="הדפסה">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3.5h10V9"/><path d="M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v6.5H7z"/><path d="M17.5 12h.01"/></svg>
+    </button>
   </div>
   <div class="dual-grid" id="grid"><div class="drag-handle"></div></div>
   <div id="endTop"></div>
@@ -251,6 +252,8 @@ function splitHead(seg, anyBig){
 }
 
 const SUGYA_BREAK = '<span class="sugya-break">❖</span>';
+// Progress within an amud is measured in Hebrew letters of the gemara, independent of layout and commentary length.
+const letterCount = html => (html || '').replace(/<[^>]*>/g, '').replace(/[^\u05D0-\u05EA]/g, '').length;
 const nextAmud = (d,a) => a === 'a' ? {daf:d, amud:'b'} : {daf:d+1, amud:'a'};
 const prevAmud = (d,a) => a === 'b' ? {daf:d, amud:'a'} : (d <= 2 ? null : {daf:d-1, amud:'b'});
 
@@ -271,6 +274,8 @@ async function loadOneAmud(s, daf, amud, carry){
   let prev = carry != null ? carry : (sugyaMap.get(normRef(segRefs[0])) || null);
   const firstSugya = prev;
   const page = `${hebrewNumeral(daf)} ע״${amudLabel(amud)}`;
+  const lens = base.map(letterCount), total = lens.reduce((a, b) => a + b, 0) || 1;
+  let acc = 0;
   let html = '';
   for (let i = 0; i < base.length; i++) {
     const sug = sugyaMap.get(normRef(segRefs[i])) || null;
@@ -284,8 +289,10 @@ async function loadOneAmud(s, daf, amud, carry){
     const comment = k.head + k.rest || (oneToOne ? '<span class="empty">—</span>' : '<span class="empty">אין פירוש מקושר</span>');
     // A marker-only line (e.g. הדרן) has no commentary, so leave that cell blank instead of a placeholder.
     const blank = g.head && !g.rest && !c;
-    html += `<p class="gemara-p am-${amud}${i === 0 ? ' page-start' : ''}"${i === 0 ? ` data-page="${page}" data-daf="${daf}" data-amud="${amud}"` : ''}>${gemara}</p><p class="comment-p">${blank ? '' : comment}</p>`;
+    html += `<p class="gemara-p am-${amud}${i === 0 ? ' page-start' : ''}" data-s="${(acc / total).toFixed(5)}"${i === 0 ? ` data-page="${page}" data-daf="${daf}" data-amud="${amud}"` : ''}>${gemara}</p><p class="comment-p">${blank ? '' : comment}</p>`;
+    acc += lens[i];
   }
+  html = `<div class="amud">${html}<svg class="amud-bar" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="100"/><path/></svg></div>`;
   return { html, firstSugya, lastSugya: prev };
 }
 
@@ -317,7 +324,6 @@ function syncHeader(){
 function check(){
   if (!state) return;
   syncHeader();
-  updateBars();
   const de = document.documentElement;
   if (de.scrollHeight - window.scrollY - window.innerHeight < 2500) loadNext();
   if (window.scrollY < 1500) loadPrev();
@@ -325,28 +331,38 @@ function check(){
 window.addEventListener('scroll', schedule, { passive: true });
 window.addEventListener('resize', () => { schedule(); clearTimeout(window._rt); window._rt = setTimeout(autoTune, 250); });
 
-// ---- amud bars (margin navigation) ----
-let bars = [];
-function layoutBars(){
-  const g = grid(), starts = [...g.querySelectorAll('.page-start')];
-  bars = bars.filter(b => b.isConnected);
-  while (bars.length > starts.length) bars.pop().remove();
-  while (bars.length < starts.length) { const b = document.createElement('div'); b.className = 'amud-bar'; b.innerHTML = '<i></i>'; g.appendChild(b); bars.push(b); }
-  starts.forEach((el, i) => {
-    const top = el.offsetTop, end = i + 1 < starts.length ? starts[i + 1].offsetTop : g.offsetHeight;
-    Object.assign(bars[i].style, { top: top + 'px', height: Math.max(0, end - top - 4) + 'px' });
-  });
-  updateBars();
-}
-function updateBars(){
-  if (!bars.length) return;
-  const y = window.scrollY + document.querySelector('.controls').offsetHeight + 40 - (grid().getBoundingClientRect().top + window.scrollY);
-  for (const b of bars) {
-    const top = parseFloat(b.style.top), h = parseFloat(b.style.height) || 1;
-    b.firstChild.style.height = Math.min(1, Math.max(0, (y - top) / h)) * 100 + '%';
+// ---- amud progress bar ----
+// The fill edge is a monotone cubic (Fritsch–Carlson) through each row's top at that row's letter share:
+// exact at every row, smooth between rows, never overshooting. The SVG stretches, so print keeps the same shape.
+function drawBar(amudEl){
+  const H = amudEl.offsetHeight, path = amudEl.querySelector('.amud-bar path');
+  if (!H || !path) return;
+  const P = [[0, 0]];
+  for (const p of amudEl.querySelectorAll('.gemara-p')) {
+    const y = p.offsetTop / H, f = +p.dataset.s, last = P[P.length - 1];
+    if (y > last[0] + 1e-4 && f >= last[1]) P.push([y, f]);
   }
+  P.push([1, 1]);
+  const n = P.length, d = [], m = [];
+  for (let k = 0; k < n - 1; k++) d.push((P[k + 1][1] - P[k][1]) / (P[k + 1][0] - P[k][0]));
+  for (let k = 0; k < n; k++) m.push(k === 0 ? d[0] : k === n - 1 ? d[n - 2] : d[k - 1] * d[k] <= 0 ? 0 : (d[k - 1] + d[k]) / 2);
+  for (let k = 0; k < n - 1; k++) {
+    if (!d[k]) { m[k] = m[k + 1] = 0; continue; }
+    const a = m[k] / d[k], b = m[k + 1] / d[k], s = a * a + b * b;
+    if (s > 9) { const t = 3 / Math.sqrt(s); m[k] = t * a * d[k]; m[k + 1] = t * b * d[k]; }
+  }
+  const f = v => (v * 100).toFixed(3);
+  let dPath = 'M0 0';
+  for (let k = 0; k < n - 1; k++) {
+    const [y0, x0] = P[k], [y1, x1] = P[k + 1], h = (y1 - y0) / 3;
+    dPath += `C${f(x0 + m[k] * h)} ${f(y0 + h)} ${f(x1 - m[k + 1] * h)} ${f(y1 - h)} ${f(x1)} ${f(y1)}`;
+  }
+  path.setAttribute('d', dPath + 'L0 100Z');
 }
-new ResizeObserver(layoutBars).observe(document.getElementById('grid'));
+const barObserver = new ResizeObserver(entries => entries.forEach(e => drawBar(e.target)));
+function trackAmuds(){
+  grid().querySelectorAll('.amud:not(.tracked)').forEach(a => { a.classList.add('tracked'); drawBar(a); barObserver.observe(a); });
+}
 
 function endNote(where, msg){
   const html = where === 'top' ? `<div class="end-note">${msg}</div>` : '<div class="end-note end-mark" role="separator" aria-hidden="true">❦</div>';
@@ -363,7 +379,7 @@ async function loadNext(){
     const r = await loadOneAmud(s, s.bDaf, s.bAmud, s.bSugya);
     if (s !== state) return;
     grid().insertAdjacentHTML('beforeend', r.html);
-    layoutBars();
+    trackAmuds();
     setStatus(`נטען עד דף ${hebrewNumeral(s.bDaf)} עמוד ${amudLabel(s.bAmud)}`);
     const n = nextAmud(s.bDaf, s.bAmud); s.bDaf = n.daf; s.bAmud = n.amud; s.bSugya = r.lastSugya;
     document.getElementById('loadMore').textContent = 'טען את העמוד הבא';
@@ -388,7 +404,7 @@ async function loadPrev(){
     const h0 = document.documentElement.scrollHeight, y0 = window.scrollY;
     if (!same) grid().querySelector('.gemara-p')?.insertAdjacentHTML('afterbegin', SUGYA_BREAK);
     grid().insertAdjacentHTML('afterbegin', r.html);
-    layoutBars();
+    trackAmuds();
     window.scrollTo(0, y0 + document.documentElement.scrollHeight - h0);
     s.tSugya = r.firstSugya;
     const p = prevAmud(s.tDaf, s.tAmud);
@@ -441,6 +457,7 @@ async function load(){
   try {
     const r = await loadOneAmud(s, daf, amud, null);
     grid().insertAdjacentHTML('beforeend', r.html);
+    trackAmuds();
     const n = nextAmud(daf, amud); s.bDaf = n.daf; s.bAmud = n.amud; s.bSugya = r.lastSugya;
     const p = prevAmud(daf, amud);
     if (!p) s.tEnded = true; else { s.tDaf = p.daf; s.tAmud = p.amud; }
@@ -492,6 +509,7 @@ keepAwake();
 populateSelects();
 document.getElementById('book').addEventListener('change', populateDafSelect);
 document.getElementById('load').addEventListener('click', load);
+document.getElementById('print').addEventListener('click', () => window.print());
 document.getElementById('loadMore').addEventListener('click', () => {
   if (!state) return;
   state.bPaused = false; state.tPaused = false; loadNext();
