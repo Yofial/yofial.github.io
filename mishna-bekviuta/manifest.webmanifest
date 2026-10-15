@@ -1,0 +1,16 @@
+{
+  "name": "מעקב לימוד משנה",
+  "short_name": "משנה",
+  "description": "מעקב אחר פרקי משנה שנלמדו, לפי סדרים ומסכתות",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#faf8f4",
+  "theme_color": "#2f6f4f",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
