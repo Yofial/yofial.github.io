@@ -3,268 +3,79 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>מעקב לימוד משנה</title>
-<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>משנה בקביעותא</title>
+<meta name="description" content="משנה בקביעותא – חמישה פרקי משנה בשבוע, כל הש״ס בשנתיים. לעילוי נשמת ינון פליישמן הי״ד.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#2f6f4f">
-<style>
-:root {
-  box-sizing: border-box;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  --bg: #faf8f4;
-  --surface: #ffffff;
-  --surface2: #f1ede4;
-  --text: #2a2620;
-  --muted: #7a7366;
-  --border: #e2dccf;
-  --accent: #2f6f4f;
-  --accent-soft: #dcefe4;
-  --accent-text: #ffffff;
-  --gold: #a9791c;
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #17150f; --surface: #221f17; --surface2: #2d2a20; --text: #efe9db;
-    --muted: #a39b88; --border: #3a3628; --accent: #4fae7f; --accent-soft: #1f3a2d;
-    --accent-text: #0f1a14; --gold: #d8a94a; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #17150f; --surface: #221f17; --surface2: #2d2a20; --text: #efe9db;
-  --muted: #a39b88; --border: #3a3628; --accent: #4fae7f; --accent-soft: #1f3a2d;
-  --accent-text: #0f1a14; --gold: #d8a94a; color-scheme: dark;
-}
-html { scroll-padding-top: env(safe-area-inset-top, 0px); }
-* { box-sizing: border-box; }
-body {
-  margin: 0; background: var(--bg); color: var(--text);
-  font-family: "Frank Ruhl Libre", "Noto Serif Hebrew", "David", Georgia, serif;
-  line-height: 1.5; -webkit-text-size-adjust: 100%;
-}
-.wrap { max-width: 760px; margin: 0 auto; padding: 16px 14px 48px; }
-h1 { font-size: 26px; margin: 4px 0 2px; }
-.sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-.total {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-  padding: 14px; margin-bottom: 16px; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
-}
-.total .row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-.big { font-size: 22px; font-weight: 700; }
-.small { font-size: 13px; color: var(--muted); }
-.bar { height: 10px; background: var(--surface2); border-radius: 99px; overflow: hidden; margin-top: 10px; }
-.bar > i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .25s; }
-.status { font-size: 12px; color: var(--muted); margin-top: 6px; min-height: 16px; }
-details.seder { margin-bottom: 12px; }
-details.seder > summary {
-  list-style: none; cursor: pointer; background: var(--surface); border: 1px solid var(--border);
-  border-radius: 12px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px;
-  font-size: 19px; font-weight: 700;
-}
-details.seder > summary::-webkit-details-marker { display: none; }
-details.seder > summary .meta { font-size: 13px; font-weight: 400; color: var(--muted); white-space: nowrap; }
-details.seder[open] > summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
-.seder-body { border: 1px solid var(--border); border-top: 0; border-radius: 0 0 12px 12px; padding: 10px; background: var(--surface2); }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 11px 12px; margin-bottom: 10px; }
-.card:last-child { margin-bottom: 0; }
-.card.done { border-color: var(--accent); background: var(--accent-soft); }
-.card-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
-.tname { font-size: 18px; font-weight: 700; }
-.badge { display: none; font-size: 12px; background: var(--accent); color: var(--accent-text); border-radius: 99px; padding: 1px 9px; margin-inline-start: 6px; vertical-align: middle; font-weight: 600; }
-.card.done .badge { display: inline-block; }
-.cnt { font-size: 13px; color: var(--muted); }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip {
-  min-width: 40px; height: 38px; padding: 0 8px; border-radius: 10px; border: 1px solid var(--border);
-  background: var(--surface); color: var(--text); font: inherit; font-size: 16px; cursor: pointer;
-  display: inline-flex; align-items: center; justify-content: center; gap: 3px;
-}
-.chip.on { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 700; }
-.chip.on::after { content: "✓"; font-size: 11px; }
-.acts { margin-top: 8px; display: flex; gap: 14px; }
-.link { background: none; border: 0; padding: 4px 0; font: inherit; font-size: 13px; color: var(--accent); cursor: pointer; }
-.link.mute { color: var(--muted); }
-.foot { margin-top: 22px; font-size: 12px; color: var(--muted); text-align: center; }
-.foot button { font-size: 12px; }
-</style>
+<meta name="theme-color" content="#1f4a6e">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:title" content="משנה בקביעותא">
+<meta property="og:description" content="חמישה פרקי משנה בשבוע, כל הש״ס בשנתיים">
+<meta property="og:image" content="flyer.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="wrap">
-  <h1>מעקב לימוד משנה</h1>
-  <div class="sub">סמנו כל פרק שסיימתם. 6 סדרים · 63 מסכתות · 524 פרקים</div>
+<header class="hero">
+  <div class="hero-in">
+    <img class="mark" src="icon.svg" alt="" width="64" height="64">
+    <h1 id="title">משנה בקביעותא</h1>
+    <p class="ded"><span id="ded">לעילוי נשמת ינון פליישמן הי״ד</span><small id="dedNote">ממשיכים ללמוד לזכרו ובדרכו</small></p>
+    <p class="cycle" id="cycle"></p>
+  </div>
+</header>
 
-  <div class="total">
-    <div class="row">
-      <span class="big" id="tot-ch">0 / 524 פרקים</span>
-      <span class="small" id="tot-tr">0 / 63 מסכתות</span>
+<main class="wrap">
+  <section class="about" id="about" aria-labelledby="aboutH"></section>
+
+  <section id="home" class="view">
+    <div class="week-head" id="weekHead"></div>
+    <div id="week"></div>
+    <div id="catchup"></div>
+    <div id="next"></div>
+    <button class="btn wide o" type="button" data-go="all">לכל ההתקדמות ←</button>
+  </section>
+
+  <section id="all" class="view" hidden>
+    <button class="back" type="button" data-go="home">→ חזרה לשבוע</button>
+    <h2>כל ההתקדמות</h2>
+    <div id="summary"></div>
+    <div class="seg" role="tablist" id="allTabs">
+      <button type="button" role="tab" data-all="weeks" aria-selected="true">לפי שבועות</button>
+      <button type="button" role="tab" data-all="tractates" aria-selected="false">לפי מסכתות</button>
     </div>
-    <div class="bar"><i id="tot-bar"></i></div>
-    <div class="status" id="status"></div>
-  </div>
+    <div id="allBody"></div>
+  </section>
 
-  <div id="app"></div>
+  <div class="account" id="account"></div>
+</main>
 
-  <div class="foot">
-    המספרים לפי החלוקה המקובלת (63 מסכתות, 524 פרקים).<br>
-    <button class="link mute" id="reset">איפוס כל ההתקדמות</button>
-  </div>
-</div>
+<footer class="foot">
+  <div class="foot-links" id="footLinks"></div>
+  <p class="foot-ded" id="footDed"></p>
+  <p class="foot-small">
+    הטקסטים באדיבות <a href="https://www.sefaria.org.il" target="_blank" rel="noopener">ספריא</a>.
+    <button type="button" class="lnk" id="openBackup">גיבוי והעברה</button>
+  </p>
+</footer>
 
-<script>
-const SEDARIM = [
-  { name: "זרעים", t: [["ברכות",9],["פאה",8],["דמאי",7],["כלאים",9],["שביעית",10],["תרומות",11],["מעשרות",5],["מעשר שני",5],["חלה",4],["ערלה",3],["ביכורים",4]] },
-  { name: "מועד", t: [["שבת",24],["עירובין",10],["פסחים",10],["שקלים",8],["יומא",8],["סוכה",5],["ביצה",5],["ראש השנה",4],["תענית",4],["מגילה",4],["מועד קטן",3],["חגיגה",3]] },
-  { name: "נשים", t: [["יבמות",16],["כתובות",13],["נדרים",11],["נזיר",9],["סוטה",9],["גיטין",9],["קידושין",4]] },
-  { name: "נזיקין", t: [["בבא קמא",10],["בבא מציעא",10],["בבא בתרא",10],["סנהדרין",11],["מכות",3],["שבועות",8],["עדויות",8],["עבודה זרה",5],["אבות",5],["הוריות",3]] },
-  { name: "קדשים", t: [["זבחים",14],["מנחות",13],["חולין",12],["בכורות",9],["ערכין",9],["תמורה",7],["כריתות",6],["מעילה",6],["תמיד",7],["מידות",5],["קינים",3]] },
-  { name: "טהרות", t: [["כלים",30],["אהלות",18],["נגעים",14],["פרה",12],["טהרות",10],["מקוואות",10],["נידה",10],["מכשירין",6],["זבים",5],["טבול יום",4],["ידיים",4],["עוקצין",3]] }
-];
+<dialog id="backup">
+  <form method="dialog" class="dlg">
+    <h3>גיבוי והעברה בין מכשירים</h3>
+    <p class="n">במצב אורח ההתקדמות נשמרת רק בדפדפן הזה. אפשר להעתיק קישור ולפתוח אותו במכשיר אחר. נוח יותר: להתחבר, וההתקדמות תישמר בחשבון.</p>
+    <button type="button" class="btn" id="copyLink">העתקת קישור עם ההתקדמות</button>
+    <details><summary class="n">טעינה מקוד</summary>
+      <textarea id="codeIn" rows="2" dir="ltr" placeholder="הדביקו כאן קוד או קישור"></textarea>
+      <button type="button" class="btn o" id="loadCode">טעינה</button>
+    </details>
+    <p><button type="button" class="lnk m" id="reset">איפוס כל ההתקדמות</button></p>
+    <button class="btn o" value="close">סגירה</button>
+  </form>
+</dialog>
 
-function heb(n) {
-  const ones = ["","א","ב","ג","ד","ה","ו","ז","ח","ט"];
-  const tens = ["","י","כ","ל"];
-  if (n === 15) return "טו";
-  if (n === 16) return "טז";
-  return tens[Math.floor(n / 10)] + ones[n % 10];
-}
-
-const LS_KEY = "mishnah-progress-v1";
-let state = {};            // tractate name -> Set of chapter numbers
-let dbDoc = null;          // db doc ref when available
-const els = { tr: {}, seder: [] };
-
-function serialize() {
-  const o = {};
-  for (const k in state) if (state[k].size) o[k] = [...state[k]].sort((a, b) => a - b);
-  return o;
-}
-function load(o) {
-  state = {};
-  for (const [, ts] of SEDARIM.map(s => [s.name, s.t]))
-    for (const [n, c] of ts) {
-      const arr = (o && Array.isArray(o[n])) ? o[n].filter(x => Number.isInteger(x) && x >= 1 && x <= c) : [];
-      state[n] = new Set(arr);
-    }
-}
-function readLocal() {
-  try { const r = localStorage.getItem(LS_KEY); return r ? JSON.parse(r) : null; } catch (e) { return null; }
-}
-function writeLocal() {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(serialize())); } catch (e) {}
-}
-
-let saveTimer = null;
-function setStatus(t) { document.getElementById("status").textContent = t; }
-function scheduleSave() {
-  writeLocal();
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(async () => {
-    if (!dbDoc) { setStatus("נשמר במכשיר זה בלבד"); return; }
-    try { await dbDoc.set({ done: serialize(), updated: Date.now() }); setStatus("נשמר ✓"); }
-    catch (e) { setStatus("נשמר במכשיר זה בלבד"); }
-  }, 500);
-}
-
-function build() {
-  const app = document.getElementById("app");
-  app.innerHTML = "";
-  SEDARIM.forEach((s, si) => {
-    const d = document.createElement("details");
-    d.className = "seder";
-    d.open = si === 0;
-    const sum = document.createElement("summary");
-    const nm = document.createElement("span"); nm.textContent = "סדר " + s.name;
-    const meta = document.createElement("span"); meta.className = "meta";
-    sum.append(nm, meta); d.appendChild(sum);
-    els.seder[si] = meta;
-    const body = document.createElement("div"); body.className = "seder-body";
-    s.t.forEach(([name, ch]) => {
-      const card = document.createElement("div"); card.className = "card";
-      const h = document.createElement("div"); h.className = "card-h";
-      const left = document.createElement("div");
-      const tn = document.createElement("span"); tn.className = "tname"; tn.textContent = "מסכת " + name;
-      const bd = document.createElement("span"); bd.className = "badge"; bd.textContent = "הושלמה";
-      left.append(tn, bd);
-      const cnt = document.createElement("span"); cnt.className = "cnt";
-      h.append(left, cnt); card.appendChild(h);
-      const chips = document.createElement("div"); chips.className = "chips";
-      const btns = [];
-      for (let i = 1; i <= ch; i++) {
-        const b = document.createElement("button");
-        b.type = "button"; b.className = "chip"; b.textContent = heb(i);
-        b.setAttribute("aria-label", "פרק " + heb(i));
-        b.addEventListener("click", () => {
-          const set = state[name];
-          set.has(i) ? set.delete(i) : set.add(i);
-          refresh(); scheduleSave();
-        });
-        btns.push(b); chips.appendChild(b);
-      }
-      card.appendChild(chips);
-      const acts = document.createElement("div"); acts.className = "acts";
-      const all = document.createElement("button"); all.type = "button"; all.className = "link"; all.textContent = "סמן הכול";
-      all.addEventListener("click", () => { for (let i = 1; i <= ch; i++) state[name].add(i); refresh(); scheduleSave(); });
-      const clr = document.createElement("button"); clr.type = "button"; clr.className = "link mute"; clr.textContent = "נקה";
-      clr.addEventListener("click", () => { state[name].clear(); refresh(); scheduleSave(); });
-      acts.append(all, clr); card.appendChild(acts);
-      els.tr[name] = { card, cnt, btns, ch };
-      body.appendChild(card);
-    });
-    d.appendChild(body); app.appendChild(d);
-  });
-}
-
-function refresh() {
-  let totCh = 0, totDone = 0, trDone = 0, trTot = 0;
-  SEDARIM.forEach((s, si) => {
-    let sc = 0, sd = 0;
-    s.t.forEach(([name, ch]) => {
-      const e = els.tr[name], set = state[name];
-      e.btns.forEach((b, i) => b.classList.toggle("on", set.has(i + 1)));
-      e.cnt.textContent = set.size + " / " + ch;
-      const full = set.size === ch;
-      e.card.classList.toggle("done", full);
-      sc += ch; sd += set.size; trTot++; if (full) trDone++;
-    });
-    els.seder[si].textContent = sd + " / " + sc + " פרקים";
-    totCh += sc; totDone += sd;
-  });
-  document.getElementById("tot-ch").textContent = totDone + " / " + totCh + " פרקים";
-  document.getElementById("tot-tr").textContent = trDone + " / " + trTot + " מסכתות";
-  document.getElementById("tot-bar").style.width = (totDone / totCh * 100) + "%";
-}
-
-document.getElementById("reset").addEventListener("click", () => {
-  if (!confirm("למחוק את כל ההתקדמות?")) return;
-  load(null); refresh(); scheduleSave();
-});
-
-// start with local data, then upgrade to the account-backed copy if available
-load(readLocal());
-build();
-refresh();
-
-(async function initDb() {
-  try {
-    const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
-    if (!db || !user) { setStatus("נשמר במכשיר זה בלבד"); return; }
-    const id = await user.id();
-    if (!id) { setStatus("נשמר במכשיר זה בלבד"); return; }
-    dbDoc = db.doc("data/users/" + id + "/progress");
-    const snap = await dbDoc.get();
-    if (snap.exists) {
-      const data = snap.data();
-      load(data && data.done);
-      writeLocal(); refresh(); setStatus("נטען מהחשבון ✓");
-    } else if (Object.values(state).some(s => s.size)) {
-      await dbDoc.set({ done: serialize(), updated: Date.now() });
-      setStatus("נשמר ✓");
-    }
-  } catch (e) { dbDoc = null; setStatus("נשמר במכשיר זה בלבד"); }
-})();
-
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-</script>
+<script type="module" src="app.js"></script>
 </body>
 </html>

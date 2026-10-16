@@ -1,0 +1,36 @@
+{
+  "_comment": "הגדרות האתר. אפשר לערוך את הקובץ ישירות ב-GitHub; האתר נטען מחדש עם הערכים החדשים בלי לגעת בקוד.",
+
+  "title": "משנה בקביעותא",
+  "dedication": "לעילוי נשמת ינון פליישמן הי״ד",
+  "dedicationNote": "ממשיכים ללמוד לזכרו ובדרכו",
+  "cycle": "מחזור ג · תשפ״ז–תשפ״ח",
+
+  "about": {
+    "headline": "רוצה לסיים את כל הש״ס משנה בשנתיים?",
+    "intro": "בהושענא רבה התחיל סבב נוסף של ׳משנה בקביעותא׳ — והפעם גם עם מסלול מיוחד לבני נוער.",
+    "points": [
+      ["book", "לימוד של חמישה פרקי משנה בכל שבוע"],
+      ["whatsapp", "קבוצת וואטסאפ לשאלות ועיון בנושאים חשובים"],
+      ["headphones", "פעם בשבוע: הודעה עם הקצב השבועי והקלטה של שיעור קצרצר על הפרקים"],
+      ["scroll", "בסיום כל מסכת יישלח סיכום של מבנה המסכת"],
+      ["gift", "הגרלות למתמידים"]
+    ]
+  },
+
+  "links": {
+    "whatsapp": "https://chat.whatsapp.com/JMogYtcin6QDKPFENUwcZq",
+    "podcast": "https://open.spotify.com/show/778wf4sWya9kJ9KfBUH3EJ",
+    "schedule": "https://docs.google.com/spreadsheets/d/1WCF_wNNITWdfaHpw-jaxCjk-7HtHfUz6l-Dn2mc3r1Q/edit?usp=sharing"
+  },
+
+  "toseftaEdition": "Lieberman",
+
+  "firebase": {
+    "_comment": "מלאו את הערכים מ-Firebase Console › Project settings › Your apps › Web app. כל עוד apiKey ריק, האתר עובד במצב אורח (שמירה במכשיר בלבד).",
+    "apiKey": "",
+    "authDomain": "",
+    "projectId": "",
+    "appId": ""
+  }
+}

@@ -1,14 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4a9670"/>
-      <stop offset="1" stop-color="#1f4a35"/>
-    </linearGradient>
-  </defs>
-  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
-  <rect x="16" y="16" width="480" height="480" rx="98" fill="none" stroke="#e9c46a" stroke-opacity=".4" stroke-width="3"/>
-  <g fill="none" stroke="#faf8f4" stroke-width="34" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M350 160V340H180M180 340V200Q180 160 220 160H290"/>
-  </g>
-  <path d="M232 390l26 26 52-56" fill="none" stroke="#e9c46a" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect width="512" height="512" rx="112" fill="#1f4a6e"/>
+  <circle cx="256" cy="256" r="186" fill="none" stroke="#d4a845" stroke-width="11"/>
+  <path transform="translate(158.1 369.5) scale(0.36 -0.36)" fill="#f6eedc" d="M73 0Q73 72 77.5 124.0Q82 176 92.0 214.0Q102 252 118 283L147 340Q152 349 149.5 356.0Q147 363 137 364L92 370Q67 374 51.0 394.0Q35 414 35 454Q35 487 43.5 517.5Q52 548 62.0 570.0Q72 592 74 597H93V584Q93 567 100.0 560.5Q107 554 118 552L171 544Q193 541 204.5 529.0Q216 517 220.0 498.5Q224 480 224 457Q224 445 223.0 432.0Q222 419 220 410L221 409Q241 419 259.0 438.0Q277 457 290.5 487.5Q304 518 311 562H322Q334 562 352.5 554.0Q371 546 390.5 533.5Q410 521 424 508Q456 480 474.5 440.5Q493 401 501.0 356.5Q509 312 509 269Q509 230 504.0 180.0Q499 130 492.0 82.0Q485 34 480 0H207L237 184H464Q466 198 467.0 210.5Q468 223 468 232Q468 271 454.0 304.5Q440 338 409.5 359.0Q379 380 330 380Q289 380 260.5 365.5Q232 351 214.5 334.0Q197 317 189 308Q162 278 146.0 232.5Q130 187 123.0 128.5Q116 70 116 0Z"/>
 </svg>
