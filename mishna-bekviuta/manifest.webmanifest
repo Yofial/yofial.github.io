@@ -1,16 +1,18 @@
 {
-  "name": "מעקב לימוד משנה",
-  "short_name": "משנה",
-  "description": "מעקב אחר פרקי משנה שנלמדו, לפי סדרים ומסכתות",
+  "name": "משנה בקביעותא",
+  "short_name": "משנה בקביעותא",
+  "description": "חמישה פרקי משנה בשבוע, כל הש״ס בשנתיים. לעילוי נשמת ינון פליישמן הי״ד.",
   "lang": "he",
   "dir": "rtl",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#faf8f4",
-  "theme_color": "#2f6f4f",
+  "background_color": "#f7f0e2",
+  "theme_color": "#1f4a6e",
   "icons": [
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ]
 }
