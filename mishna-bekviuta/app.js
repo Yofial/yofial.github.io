@@ -47,7 +47,7 @@ const ICON = {
 // ---------------- data ----------------
 const getJSON = async (u) => { try { const r = await fetch(u, { cache: "no-cache" }); return r.ok ? await r.json() : null; } catch (e) { return null; } };
 const [C, S, E] = await Promise.all([getJSON("config.json"), getJSON("schedule.json"), getJSON("episodes.json")]);
-const CFG = C || {}, LINKS = CFG.links || {};
+const CFG = C || {}, LINKS = Object.fromEntries(Object.entries(CFG.links || {}).filter(([, v]) => /^https:\/\//i.test(String(v))));
 const WEEKS = [];
 { let g = 0; for (const w of (S && S.weeks) || []) { const n = Math.max(0, Math.min(+w.chapters || 0, N - g)); WEEKS.push({ ...w, a: g, b: g + n }); g += n; } }
 
@@ -69,7 +69,8 @@ const epsFor = (a, b) => EPISODES.filter(e => e.a < b && e.b >= a);
 // ---------------- dates ----------------
 const pad = n => String(n).padStart(2, "0");
 const now = new Date();
-const TODAY = new URLSearchParams(location.search).get("date") || `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+const qDate = new URLSearchParams(location.search).get("date");
+const TODAY = /^\d{4}-\d{2}-\d{2}$/.test(qDate || "") ? qDate : `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 const CW = WEEKS.findIndex(w => w.shabbat >= TODAY); // current week = the first whose Shabbat hasn't passed
 const gd = iso => { const [y, m, d] = iso.split("-"); return `${+d}.${+m}.${y}`; };
 const days = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
@@ -97,11 +98,17 @@ const API = "https://www.sefaria.org/api";
 const memo = new Map();
 const cached = (k, f) => { if (!memo.has(k)) memo.set(k, f().catch(e => { memo.delete(k); throw e; })); return memo.get(k); };
 async function fetchJSON(u) { const r = await fetch(u, { headers: { accept: "application/json" } }); if (!r.ok) { const e = new Error(r.status); e.status = r.status; throw e; } return r.json(); }
+// Sefaria text is third-party HTML: parse it inertly and rebuild it from text plus a few attribute-less tags.
+const KEEP = new Set(["B", "STRONG", "BIG", "SMALL", "BR"]), DROP = new Set(["SUP", "SCRIPT", "STYLE", "TEMPLATE", "SVG", "MATH"]);
 function clean(html) {
-  return String(html || "")
-    .replace(/<sup[^>]*>[\s\S]*?<\/sup>/gi, "").replace(/<i class="footnote"[^>]*>[\s\S]*?<\/i>/gi, "")
-    .replace(/<(\/?)(b|strong|big|small|br)\b[^>]*>/gi, "\u0001$1$2\u0002").replace(/<[^>]*>/g, "")
-    .replace(/\u0001/g, "<").replace(/\u0002/g, ">").trim();
+  const walk = n => [...n.childNodes].map(c => {
+    if (c.nodeType === 3) return esc(c.nodeValue);
+    if (c.nodeType !== 1 || DROP.has(c.nodeName.toUpperCase()) || c.classList.contains("footnote")) return "";
+    const tag = c.nodeName.toUpperCase();
+    if (tag === "BR") return "<br>";
+    return KEEP.has(tag) ? `<${tag.toLowerCase()}>${walk(c)}</${tag.toLowerCase()}>` : walk(c);
+  }).join("");
+  return walk(new DOMParser().parseFromString(String(html || ""), "text/html").body).trim();
 }
 async function segments(ref) {
   const d = await fetchJSON(`${API}/v3/texts/${encodeURIComponent(ref)}?version=hebrew`);
